@@ -4,7 +4,8 @@ response:
   type: object
   properties:
     impression_source:
-      type: single_enum
+      type: enum_single
+      alter: ImpressionSourceEnum
       value:
         - For You
         - Follow

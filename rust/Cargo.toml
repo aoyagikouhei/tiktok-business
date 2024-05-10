@@ -13,6 +13,8 @@ documentation = "https://docs.rs/tiktok-business"
 
 [dependencies]
 base64 = "0.22"
+chrono = { version = "0.4", features = [ "serde" ] }
+isocountry = "0.3.2"
 itertools = "0.12"
 percent-encoding = "2.3"
 rand = "0.8"

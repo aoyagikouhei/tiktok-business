@@ -7,7 +7,8 @@ use reqwest::{header::CACHE_CONTROL, StatusCode};
 
 const AUTH_URL: &str = "https://www.tiktok.com/v2/auth/authorize/";
 const TOKEN_URL: &str = "https://business-api.tiktok.com/open_api/v1.3/tt_user/oauth2/token/";
-const REFRESH_TOKEN_URL: &str = "https://business-api.tiktok.com/open_api/v1.3/tt_user/oauth2/refresh_token/";
+const REFRESH_TOKEN_URL: &str =
+    "https://business-api.tiktok.com/open_api/v1.3/tt_user/oauth2/refresh_token/";
 const REVOKE_URL: &str = "https://business-api.tiktok.com/open_api/v1.3/tt_user/oauth2/revoke/";
 
 pub mod scope;
@@ -17,7 +18,6 @@ use serde_json::json;
 
 use self::response::{RevokeResponse, TokenResponse};
 pub mod response;
-
 
 #[derive(Debug, Clone)]
 pub struct OAuthUrlResult {
@@ -110,9 +110,9 @@ fn csrf_token() -> String {
     BASE64_URL_SAFE_NO_PAD.encode(random_bytes)
 }
 
-async fn make_response<T>(url: &str, json: &serde_json::Value) -> Result<(T, StatusCode), Error> 
+async fn make_response<T>(url: &str, json: &serde_json::Value) -> Result<(T, StatusCode), Error>
 where
-    T: DeserializeOwned
+    T: DeserializeOwned,
 {
     let response = execute_send(url, json).await?;
     let status_code = response.status();

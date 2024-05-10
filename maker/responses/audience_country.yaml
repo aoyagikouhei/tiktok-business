@@ -4,7 +4,7 @@ response:
   type: object
   properties:
     country:
-      type: single_enum
+      type: enum_single
       crate: isocountry::CountryCode
     percentage:
       type: float 

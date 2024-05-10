@@ -48,6 +48,9 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
     }
     let oauth = oauth_client();
     let res = oauth.token(hash_query.get("code").unwrap()).await.unwrap();
+
+    get_business_get::
+
     println!("{:?}", res);
     "success".into_response()
 }

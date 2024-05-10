@@ -1,0 +1,18 @@
+<%
+def make_query_value(it, prefix)
+  case it[:type]
+  when "enum" then
+    "format!(\"[\\\"{}\\\"]\", #{prefix}#{it[:name].make_name.make_field}.iter().join(\"\\\",\\\"\"))"
+  when "string" then
+    "#{prefix}#{it[:name].make_name.make_field}"
+  else
+    "#{prefix}#{it[:name].make_name.make_field}.to_string()"
+  end
+end
+
+%><% if queries.present? %>
+let mut query_parameters = vec![];<% end %><% required_queries.each do |it| %>
+query_parameters.push(("<%= it[:name] %>", <%= make_query_value(it, "self.") %>));<% end %><% non_required_queries.each do |it| %>
+if let Some(<%= it[:name].make_name.make_field %>) = self.<%= it[:name].make_name.make_field %> {
+    query_parameters.push(("<%= it[:name] %>", <%= make_query_value(it, "") %>));
+}<% end %>
