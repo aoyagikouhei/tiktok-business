@@ -1,4 +1,4 @@
-use crate::error::Error;
+use crate::{error::Error, URL_PREFIX};
 use base64::prelude::{Engine as _, BASE64_URL_SAFE_NO_PAD};
 use itertools::Itertools;
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
@@ -6,17 +6,17 @@ use rand::Rng;
 use reqwest::{header::CACHE_CONTROL, StatusCode};
 
 const AUTH_URL: &str = "https://www.tiktok.com/v2/auth/authorize/";
-const TOKEN_URL: &str = "https://business-api.tiktok.com/open_api/v1.3/tt_user/oauth2/token/";
-const REFRESH_TOKEN_URL: &str =
-    "https://business-api.tiktok.com/open_api/v1.3/tt_user/oauth2/refresh_token/";
-const REVOKE_URL: &str = "https://business-api.tiktok.com/open_api/v1.3/tt_user/oauth2/revoke/";
+const TOKEN_URL: &str = "/tt_user/oauth2/token/";
+const REFRESH_TOKEN_URL: &str = "/tt_user/oauth2/refresh_token/";
+const REVOKE_URL: &str = "/tt_user/oauth2/revoke/";
+const TOKEN_INFO_URL: &str = "/tt_user/token_info/get/";
 
 pub mod scope;
 pub use scope::TiktokScope;
 use serde::de::DeserializeOwned;
 use serde_json::json;
 
-use self::response::{RevokeResponse, TokenResponse};
+use self::response::{RevokeResponse, TokenInfoResponse, TokenResponse};
 pub mod response;
 
 #[derive(Debug, Clone)]
@@ -90,12 +90,24 @@ impl TiktokOauth {
         });
         make_response(REVOKE_URL, &json).await
     }
+
+    pub async fn token_info(
+        &self,
+        access_token: &str,
+    ) -> Result<(TokenInfoResponse, StatusCode), Error> {
+        let json = json!({
+            "app_id": self.client_key,
+            "access_token": access_token,
+        });
+        make_response(TOKEN_INFO_URL, &json).await
+    }
 }
 
 async fn execute_send(
     url: &str,
     json: &serde_json::Value,
 ) -> Result<reqwest::Response, reqwest::Error> {
+    let url = format!("{}{}", URL_PREFIX, url);
     reqwest::Client::new()
         .post(url)
         .header(CACHE_CONTROL, "no-cache")
@@ -106,7 +118,6 @@ async fn execute_send(
 
 fn csrf_token() -> String {
     let random_bytes: Vec<u8> = (0..16).map(|_| rand::thread_rng().gen::<u8>()).collect();
-    println!("{}", random_bytes.len());
     BASE64_URL_SAFE_NO_PAD.encode(random_bytes)
 }
 

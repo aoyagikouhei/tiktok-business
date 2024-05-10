@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 pub type TokenResponse = Respense<TokenData>;
+pub type TokenInfoResponse = Respense<TokenInfoData>;
 pub type RevokeResponse = Respense<serde_json::Value>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -20,4 +21,11 @@ pub struct TokenData {
     pub refresh_token: String,
     pub refresh_token_expires_in: u64,
     pub token_type: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TokenInfoData {
+    pub app_id: String,
+    pub scope: String,
+    pub creator_id: String,
 }

@@ -5,7 +5,11 @@ use axum::{
     Router,
 };
 use std::collections::HashMap;
-use tiktok_business_api::oauth::{TiktokOauth, TiktokScope};
+use tiktok_business::{
+    apis::get_business_get,
+    oauth::{TiktokOauth, TiktokScope},
+    responses::account::AccountField,
+};
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use url::Url;
 
@@ -48,9 +52,14 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
     }
     let oauth = oauth_client();
     let res = oauth.token(hash_query.get("code").unwrap()).await.unwrap();
-
-    get_business_get::
-
     println!("{:?}", res);
+    if let Some(token_data) = res.0.data {
+        let res = get_business_get::Api::new(&token_data.open_id, AccountField::all())
+            .execute(&token_data.access_token)
+            .await
+            .unwrap();
+        println!("{:?}", res);
+    }
+
     "success".into_response()
 }

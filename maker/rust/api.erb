@@ -26,7 +26,7 @@ impl Api {
             .<%= yml[:method] %>(make_url(URL))<% if queries.present? %>
             .query(&query_parameters)<% end %><% if bodies.present? %>
             .json(&self.body)<% end %>
-            .bearer_auth(bearer_code)
+            .header("Access-Token", bearer_code)
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {

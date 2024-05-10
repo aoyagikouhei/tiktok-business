@@ -60,7 +60,6 @@ pub enum AccountField {
     FollowersCount,
     AudienceCountries,
     AudienceGenders,
-    Metrics,
 }
 
 impl AccountField {
@@ -73,7 +72,6 @@ impl AccountField {
         set.insert(AccountField::FollowersCount);
         set.insert(AccountField::AudienceCountries);
         set.insert(AccountField::AudienceGenders);
-        set.insert(AccountField::Metrics);
         set
     }
 }
@@ -88,7 +86,6 @@ impl std::fmt::Display for AccountField {
             Self::FollowersCount => write!(f, "followers_count"),
             Self::AudienceCountries => write!(f, "audience_countries"),
             Self::AudienceGenders => write!(f, "audience_genders"),
-            Self::Metrics => write!(f, "metrics"),
         }
     }
 }

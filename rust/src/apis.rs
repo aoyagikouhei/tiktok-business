@@ -3,24 +3,24 @@ use chrono::prelude::*;
 pub mod get_business_get;
 pub mod get_business_video_list;
 
-const URL_PREFIX: &str = "https://business-api.tiktok.com/open_api/v1.3";
-
 pub fn make_url(postfix: &str) -> String {
     format!("{}{}", URL_PREFIX, postfix)
 }
 
+#[derive(Debug)]
 pub struct ApiResponse<T> {
     pub body: T,
     pub status_code: StatusCode,
     pub header: Option<ResponseHeader>,
 }
 
+#[derive(Debug)]
 pub struct ResponseHeader {
     pub date: DateTime<Utc>,
     pub x_tt_log_id: String,
 }
 
-use crate::error::Error;
+use crate::{error::Error, URL_PREFIX};
 use reqwest::{header::HeaderMap, RequestBuilder, StatusCode};
 use serde::de::DeserializeOwned;
 

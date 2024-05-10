@@ -105,15 +105,17 @@ impl Default for <%= key %> {
 }
 <% end %>
 
-<% if independence_flag %>
+<% if independence_flag
+fields = properties.select{|k,v| v[:ignore_all].blank?}
+%>
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
-pub enum <%= class_name %>Field {<% properties.each_pair do |key, value| %>
+pub enum <%= class_name %>Field {<% fields.each_pair do |key, value| %>
     <%= key.to_s.ucc %>,<% end %>
 }
 
 impl <%= class_name %>Field {
     pub fn all() -> HashSet<Self> {
-        let mut set = HashSet::new();<% properties.each_pair do |key, value| %>
+        let mut set = HashSet::new();<% fields.each_pair do |key, value| %>
         set.insert(<%= class_name %>Field::<%= key.to_s.ucc %>);<% end %>
         set
     }
@@ -121,7 +123,7 @@ impl <%= class_name %>Field {
 
 impl std::fmt::Display for <%= class_name %>Field {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {<% properties.each_pair do |key, value| %>
+        match self {<% fields.each_pair do |key, value| %>
             Self::<%= key.to_s.ucc %> => write!(f, "<%= key %>"),<% end %>
         }
     }

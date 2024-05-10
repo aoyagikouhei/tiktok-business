@@ -56,7 +56,7 @@ impl Api {
         client
             .get(make_url(URL))
             .query(&query_parameters)
-            .bearer_auth(bearer_code)
+            .header("Access-Token", bearer_code)
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {

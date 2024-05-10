@@ -10,5 +10,5 @@ axum = "0.7"
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 tower-cookies = "0.10"
-tiktok-business-api = { path="../..", features = ["rustls-tls"], default-features = false }
+tiktok-business = { path="../..", features = ["rustls-tls"], default-features = false }
 url = "2.5"
