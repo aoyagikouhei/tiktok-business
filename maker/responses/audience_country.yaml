@@ -1,0 +1,10 @@
+---
+
+response:
+  type: object
+  properties:
+    country:
+      type: string
+    percentage:
+      type: float 
+   

@@ -1,0 +1,47 @@
+---
+
+response:
+  type: object
+  properties:
+    item_id:
+      type: string
+    create_time:
+      type: string
+    thumbnail_url:
+      type: string
+    share_url:
+      type: string
+    embed_url:
+      type: string
+    caption:
+      type: string
+    video_views:
+      type: int
+    video_duration:
+      type: float
+    likes:
+      type: int
+    comments:
+      type: int
+    shares:
+      type: int
+    reach:
+      type: int
+    full_video_watched_rate:
+      type: float
+    total_time_watched:
+      type: float
+    average_time_watched:
+      type: float
+    impression_sources:
+      type: array
+      items:
+        type: object
+        ref: impression_source
+    audience_countries :
+      type: array
+      items:
+        type: object
+        ref: audience_country
+
+    

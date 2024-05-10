@@ -1,0 +1,39 @@
+---
+
+url: /business/video/list/
+method: get
+queries:
+  - name: business_id
+    required: true
+    type: string
+  - name: fields
+    required: true
+    type: enum
+    value: video
+  - name: cursor
+    type: int
+  - name: max_count
+    type: int
+    min: 10
+    max: 20
+response:
+  type: object
+  properties:
+    request_id:
+      type: string
+    code:
+      type: int
+    message:
+      type: string
+    data:
+      type: object
+      properties:
+        videos:
+          type: array
+          items:
+            type: object
+            ref: video
+        cursor:
+          type: int
+        has_more:
+          type: boolean

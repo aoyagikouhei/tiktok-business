@@ -1,0 +1,9 @@
+---
+
+response:
+  type: object
+  properties:
+    impression_source:
+      type: string
+    percentage:
+      type: float
