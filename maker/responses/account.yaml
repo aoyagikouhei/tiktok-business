@@ -1,0 +1,32 @@
+---
+
+response:
+  type: object
+  properties:
+    is_business_account:
+      type: bool
+    username:
+      type: string
+    display_name:
+      type: string
+    profile_image:
+      type: string
+    followers_count:
+      type: int
+    audience_countries:
+      type: array
+      items:
+        type: object
+        ref: audience_country
+    audience_genders:
+      type: array
+      items:
+        type: object
+        ref: audience_gender
+    metrics:
+      type: array
+      items:
+        type: object
+        ref: metric
+
+    

@@ -4,6 +4,14 @@ response:
   type: object
   properties:
     impression_source:
-      type: string
+      type: single_enum
+      value:
+        - For You
+        - Follow
+        - Hashtag
+        - Sound
+        - Personal Profile
+        - other_profile_vv
+        - Search
     percentage:
       type: float

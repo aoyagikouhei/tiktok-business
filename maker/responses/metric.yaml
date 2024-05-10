@@ -1,0 +1,25 @@
+---
+
+response:
+  type: object
+  properties:
+    date:
+      type: string
+    followers_count:
+      type: int 
+    profile_views:
+      type: int 
+    video_views:
+      type: int 
+    likes:
+      type: int 
+    comments:
+      type: int 
+    shares:
+      type: int 
+    audience_activity:
+      type: array
+      items:
+        type: object
+        ref: audience_activity
+   

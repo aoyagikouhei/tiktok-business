@@ -3,9 +3,12 @@
 response:
   type: object
   properties:
-    country:
+    gender:
       type: single_enum
-      crate: isocountry::CountryCode
+      value:
+        - Female
+        - Male
+        - Other
     percentage:
       type: float 
    

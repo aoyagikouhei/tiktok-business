@@ -1,0 +1,28 @@
+---
+
+url: /business/get/
+method: get
+queries:
+  - name: business_id
+    required: true
+    type: string
+  - name: start_date
+    type: string
+  - name: end_date
+    type: string
+  - name: fields
+    required: true
+    type: enum
+    value: account
+response:
+  type: object
+  properties:
+    request_id:
+      type: string
+    code:
+      type: int
+    message:
+      type: string
+    data:
+      type: object
+      ref: account

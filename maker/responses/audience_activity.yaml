@@ -1,0 +1,10 @@
+---
+
+response:
+  type: object
+  properties:
+    hour:
+      type: string
+    count:
+      type: int 
+   
