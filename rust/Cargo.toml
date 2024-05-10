@@ -1,10 +1,15 @@
-workspace = { members = ["examples/oauth-web"] }
 [package]
-name = "tiktok-business-api"
+name = "tiktok-business"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
+license = "MIT"
+description = "TikTok Business API library."
+repository = "https://github.com/aoyagikouhei/tiktok-business-api-rs"
+keywords = ["tiktok", "api", "client", "oauth"]
+categories = ["api-bindings"]
+readme = "README.md"
+documentation = "https://docs.rs/tiktok-business"
 
 [dependencies]
 base64 = "0.22"
