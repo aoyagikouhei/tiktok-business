@@ -18,7 +18,7 @@ TikTok Business API library.
 - reqwest/rustls-tls
 
 ## Changes
-[CHANGELOG.md](https://github.com/aoyagikouhei/tiktok-business-api-rs/blob/main/rust/CHANGELOG.md)
+[CHANGELOG.md](https://github.com/aoyagikouhei/tiktok-business/blob/main/rust/CHANGELOG.md)
 
 ## Examples
 

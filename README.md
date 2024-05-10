@@ -1,1 +1,1 @@
-# tiktok-business-api
+# tiktok-business
