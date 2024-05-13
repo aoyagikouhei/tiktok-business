@@ -6,9 +6,13 @@ TikTok Business API library.
 
 - OAuth2
 - OAuth web example
+- Mockable Api
 
 ## Supported APIs
-
+- GET /business/comment/reply/create/
+- GET /business/get/
+- GET /business/video/list/
+- POST /business/comment/reply/create/
 
 ## Features
 ### default
@@ -19,17 +23,3 @@ TikTok Business API library.
 
 ## Changes
 [CHANGELOG.md](https://github.com/aoyagikouhei/tiktok-business/blob/main/rust/CHANGELOG.md)
-
-## Examples
-
-### API
-```rust
-use tiktokapi_v2::{
-    apis::get_v2_user_info::Api,
-    responses::user::UserField,
-};
-let access_token = "xxx";
-let api = Api::new(UserField::all());
-let res = api.execute(access_token).await.unwrap();
-println!("{:?}", res);
-```

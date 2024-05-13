@@ -1,7 +1,7 @@
 use crate::responses::video::Video;
 use crate::responses::video::VideoField;
 use crate::{
-    apis::{execute_api, make_url, ApiResponse},
+    apis::{execute_api, make_url, ApiOptions, ApiResponse},
     error::Error as ApiError,
 };
 use itertools::Itertools;
@@ -13,6 +13,7 @@ const URL: &str = "/business/video/list/";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
+    options: Option<ApiOptions>,
     business_id: String,
     fields: HashSet<VideoField>,
     cursor: Option<usize>,
@@ -20,8 +21,13 @@ pub struct Api {
 }
 
 impl Api {
-    pub fn new(business_id: &str, fields: HashSet<VideoField>) -> Self {
+    pub fn new(
+        business_id: &str,
+        fields: HashSet<VideoField>,
+        options: Option<ApiOptions>,
+    ) -> Self {
         Self {
+            options,
             business_id: business_id.to_owned(),
             fields,
             ..Default::default()
@@ -54,7 +60,7 @@ impl Api {
         }
         let client = reqwest::Client::new();
         client
-            .get(make_url(URL))
+            .get(make_url(URL, &self.options))
             .query(&query_parameters)
             .header("Access-Token", bearer_code)
     }

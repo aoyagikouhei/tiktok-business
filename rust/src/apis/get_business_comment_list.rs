@@ -1,6 +1,6 @@
 use crate::responses::comment::Comment;
 use crate::{
-    apis::{execute_api, make_url, ApiResponse},
+    apis::{execute_api, make_url, ApiOptions, ApiResponse},
     error::Error as ApiError,
 };
 use reqwest::RequestBuilder;
@@ -10,6 +10,7 @@ const URL: &str = "/business/comment/list/";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
+    options: Option<ApiOptions>,
     business_id: String,
     video_id: String,
     comment_ids: Option<Vec<String>>,
@@ -97,8 +98,9 @@ impl Default for SortOrder {
 }
 
 impl Api {
-    pub fn new(business_id: &str, video_id: &str) -> Self {
+    pub fn new(business_id: &str, video_id: &str, options: Option<ApiOptions>) -> Self {
         Self {
+            options,
             business_id: business_id.to_owned(),
             video_id: video_id.to_owned(),
             ..Default::default()
@@ -171,7 +173,7 @@ impl Api {
         }
         let client = reqwest::Client::new();
         client
-            .get(make_url(URL))
+            .get(make_url(URL, &self.options))
             .query(&query_parameters)
             .header("Access-Token", bearer_code)
     }

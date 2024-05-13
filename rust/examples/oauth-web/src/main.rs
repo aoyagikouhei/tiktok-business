@@ -4,15 +4,18 @@ use axum::{
     routing::get,
     Router,
 };
+use chrono::prelude::*;
 use std::collections::HashMap;
 use tiktok_business::{
-    apis::{get_business_comment_list, get_business_get, get_business_video_list, post_business_comment_reply_create},
+    apis::{
+        get_business_comment_list, get_business_get, get_business_video_list,
+        post_business_comment_reply_create,
+    },
     oauth::{TiktokOauth, TiktokScope},
     responses::{account::AccountField, video::VideoField},
 };
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use url::Url;
-use chrono::prelude::*;
 
 pub const CSRF_TOKEN: &str = "csrf_token";
 
@@ -55,23 +58,44 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
     let res = oauth.token(hash_query.get("code").unwrap()).await.unwrap();
     println!("{:?}", res);
     if let Some(token_data) = res.0.data {
-        let res = get_business_get::Api::new(&token_data.open_id, AccountField::all())
+        let res = get_business_get::Api::new(&token_data.open_id, AccountField::all(), None)
             .execute(&token_data.access_token)
             .await
             .unwrap();
         println!("{:?}", res);
-        let res = get_business_video_list::Api::new(&token_data.open_id, VideoField::all())
+        let res = get_business_video_list::Api::new(&token_data.open_id, VideoField::all(), None)
             .execute(&token_data.access_token)
             .await
             .unwrap();
         println!("{:?}", res);
-        let video_id = res.body.data.as_ref().unwrap().videos.as_ref().unwrap().get(0).unwrap().item_id.as_ref().unwrap();
-        let res = get_business_comment_list::Api::new(&token_data.open_id, video_id)
+        let video_id = res
+            .body
+            .data
+            .as_ref()
+            .unwrap()
+            .videos
+            .as_ref()
+            .unwrap()
+            .get(0)
+            .unwrap()
+            .item_id
+            .as_ref()
+            .unwrap();
+        let res = get_business_comment_list::Api::new(&token_data.open_id, video_id, None)
             .execute(&token_data.access_token)
             .await
             .unwrap();
         println!("{:?}", res);
-        let comment = res.body.data.as_ref().unwrap().comments.as_ref().unwrap().get(0).unwrap();
+        let comment = res
+            .body
+            .data
+            .as_ref()
+            .unwrap()
+            .comments
+            .as_ref()
+            .unwrap()
+            .get(0)
+            .unwrap();
         let comment_id = comment.comment_id.as_ref().unwrap();
         let username = comment.username.as_ref().unwrap();
         let body = post_business_comment_reply_create::Body {
@@ -81,11 +105,13 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
             text: format!("予定表～①💖ﾊﾝｶｸだ{} @{}", Utc::now(), username),
         };
         println!("{:?}", body);
-        let res = post_business_comment_reply_create::Api::new(body)
+        /*
+        let res = post_business_comment_reply_create::Api::new(body, None)
             .execute(&token_data.access_token)
             .await
             .unwrap();
         println!("{:?}", res);
+         */
     }
 
     "success".into_response()

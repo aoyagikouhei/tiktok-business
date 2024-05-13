@@ -1,6 +1,6 @@
 use crate::responses::comment::Comment;
 use crate::{
-    apis::{execute_api, make_url, ApiResponse},
+    apis::{execute_api, make_url, ApiOptions, ApiResponse},
     error::Error as ApiError,
 };
 use reqwest::RequestBuilder;
@@ -18,19 +18,20 @@ pub struct Body {
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
+    options: Option<ApiOptions>,
     body: Body,
 }
 
 impl Api {
-    pub fn new(body: Body) -> Self {
-        Self { body }
+    pub fn new(body: Body, options: Option<ApiOptions>) -> Self {
+        Self { options, body }
     }
 
     #[allow(clippy::vec_init_then_push)]
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
         let client = reqwest::Client::new();
         client
-            .post(make_url(URL))
+            .post(make_url(URL, &self.options))
             .json(&self.body)
             .header("Access-Token", bearer_code)
     }

@@ -5,7 +5,7 @@ use std::collections::HashSet;
 <% end %>use reqwest::RequestBuilder;
 use serde::{Serialize, Deserialize};
 use crate::{
-    apis::{make_url, execute_api, ApiResponse},
+    apis::{make_url, execute_api, ApiResponse, ApiOptions},
     error::Error as ApiError,
 };
 
@@ -23,7 +23,7 @@ impl Api {
 <%= parameters %>
         let client = reqwest::Client::new();
         client
-            .<%= yml[:method] %>(make_url(URL))<% if queries.present? %>
+            .<%= yml[:method] %>(make_url(URL, &self.options))<% if queries.present? %>
             .query(&query_parameters)<% end %><% if bodies.present? %>
             .json(&self.body)<% end %>
             .header("Access-Token", bearer_code)
