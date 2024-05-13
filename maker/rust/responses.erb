@@ -106,7 +106,7 @@ impl Default for <%= key %> {
 <% end %>
 
 <% if independence_flag
-fields = properties.select{|k,v| v[:ignore_all].blank?}
+fields = properties.select{|k,v| v[:ignore_field].blank?}
 %>
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum <%= class_name %>Field {<% fields.each_pair do |key, value| %>

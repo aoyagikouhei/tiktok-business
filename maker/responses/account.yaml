@@ -28,6 +28,4 @@ response:
       items:
         type: object
         ref: metric
-      ignore_all: true
-
-    
+      ignore_field: true

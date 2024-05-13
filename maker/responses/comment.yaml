@@ -1,0 +1,43 @@
+---
+
+response:
+  type: object
+  properties:
+    comment_id:
+      type: string
+    video_id:
+      type: string
+    user_id:
+      type: string
+    create_time:
+      type: string
+    text:
+      type: string
+    likes:
+      type: int
+    replies:
+      type: int
+    owner:
+      type: bool
+    liked:
+      type: bool
+    pinned:
+      type: bool
+    status:
+      type: enum_single
+      value:
+        - HIDDEN
+        - PUBLIC
+    username:
+      type: string
+    profile_image:
+      type: string
+    parent_comment_id:
+      type: string
+    reply_list :
+      type: array
+      items:
+        type: object
+        ref: reply
+
+    

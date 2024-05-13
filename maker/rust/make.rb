@@ -95,6 +95,7 @@ def execute_apis(path)
   yml = YAML.load_file(path).deep_symbolize_keys
   @fields = []
   @enum_flag = false
+  @enum_request = {}
 
   queries = yml[:queries] || []
   required_queries = queries.filter{|it| it[:required]}

@@ -8,9 +8,13 @@ def make_type(it)
       @fields << it[:value] if it[:value].present?
       "HashSet<#{it[:value].ucc}Field>"
     when "enum_single" then
-      "#{it[:value].ucc}"
+      name = it[:name].ucc
+      @enum_request[name] = it[:value]
+      name
     when "bool" then
       "bool"
+    when "array" then
+      "Vec<#{it[:items][:type].ucc}>"
     else
       "String"
     end
@@ -25,3 +29,23 @@ pub struct Api {<% queries.each do |it| %>
     <%= it[:name].make_name.make_field %>: <%= make_type(it) %>,<% end %><% if bodies.present? %>
     body: Body,<% end %>
 }
+
+<% @enum_request.each_pair do |key, ary| %>
+  #[derive(Serialize, Deserialize, Debug, Clone)]
+  pub enum <%= key %> {<% ary.each do |it| %>
+      #[serde(rename = "<%= it %>")]
+      <%= it.ucc %>,<% end %>
+  }
+  
+  impl std::fmt::Display for <%= key %> {
+      fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+          match self {<% ary.each do |it| %>
+              Self::<%= it.ucc %> => write!(f, "<%= it %>"),<% end %>
+          }
+      }
+  }
+  
+  impl Default for <%= key %> {
+      fn default() -> Self { Self::<%= ary.first.ucc %> }
+  }
+  <% end %>

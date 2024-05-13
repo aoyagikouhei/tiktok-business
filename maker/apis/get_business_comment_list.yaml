@@ -1,0 +1,61 @@
+---
+
+url: /business/comment/list/
+method: get
+queries:
+  - name: business_id
+    required: true
+    type: string
+  - name: video_id
+    required: true
+    type: string
+  - name: comment_ids
+    type: array
+    items:
+      type: string
+  - name: include_replies
+    type: bool
+  - name: status
+    type: enum_single
+    value:
+      - ALL
+      - PUBLIC
+  - name: sort_field
+    type: enum_single
+    value:
+      - likes
+      - replies
+      - create_time
+  - name: sort_order
+    type: enum_single
+    value:
+      - asc
+      - desc
+      - smart
+  - name: cursor
+    type: int
+  - name: max_count
+    type: int
+    min: 1
+    max: 30
+response:
+  type: object
+  properties:
+    request_id:
+      type: string
+    code:
+      type: int
+    message:
+      type: string
+    data:
+      type: object
+      properties:
+        comments:
+          type: array
+          items:
+            type: object
+            ref: comment
+        cursor:
+          type: int
+        has_more:
+          type: boolean

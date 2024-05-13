@@ -9,6 +9,8 @@ def make_new_type(it)
     "#{it[:name].ucc}"
   when "bool" then
     "bool"
+  when "array" then
+    "Vec<#{it[:items][:type]}>"
   else
     "&str"
   end

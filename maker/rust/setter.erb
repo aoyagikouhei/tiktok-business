@@ -7,6 +7,8 @@ def make_field_type(it)
     "HashSet<#{it[:name].ucc}>"
   when "enum_single" then
     "#{it[:name].ucc}"
+  when "array" then
+    "Vec<#{it[:items][:type].ucc}>"
   when "date" then
     "DateTime<Utc>"
   when "bool" then

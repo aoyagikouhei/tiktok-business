@@ -5,6 +5,8 @@ def make_query_value(it, prefix)
     "format!(\"[\\\"{}\\\"]\", #{prefix}#{it[:name].make_name.make_field}.iter().join(\"\\\",\\\"\"))"
   when "string" then
     "#{prefix}#{it[:name].make_name.make_field}"
+  when "array" then
+    "format!(\"[\\\"{}\\\"]\", #{prefix}#{it[:name].make_name.make_field}.join(\"\\\",\\\"\"))"
   else
     "#{prefix}#{it[:name].make_name.make_field}.to_string()"
   end
