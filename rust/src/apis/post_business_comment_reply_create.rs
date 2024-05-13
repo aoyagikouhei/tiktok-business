@@ -23,10 +23,7 @@ pub struct Api {
 
 impl Api {
     pub fn new(body: Body) -> Self {
-        Self {
-            body,
-            ..Default::default()
-        }
+        Self { body }
     }
 
     #[allow(clippy::vec_init_then_push)]

@@ -38,7 +38,7 @@ new_array << "body: Body" if bodies.present?
 %>pub fn new(<%= new_array.join(", ") %>) -> Self {
     Self {<% required_queries.each do |it| %>
         <%= required_new(it) %>,<% end %><% if bodies.present? %>
-        body,<% end %>
-        ..Default::default()
+        body,<% end %><% if non_required_queries.present? %>
+        ..Default::default()<% end %>
     }
 }
