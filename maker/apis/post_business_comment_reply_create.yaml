@@ -1,0 +1,30 @@
+---
+
+url: /business/comment/reply/create/
+method: post
+body:
+  properties:
+    - name: business_id
+      required: true
+      type: string
+    - name: video_id
+      required: true
+      type: string
+    - name: comment_id
+      required: true
+      type: string
+    - name: text
+      required: true
+      type: string
+response:
+  type: object
+  properties:
+    request_id:
+      type: string
+    code:
+      type: int
+    message:
+      type: string
+    data:
+      type: object
+      ref: comment
