@@ -6,12 +6,13 @@ use axum::{
 };
 use std::collections::HashMap;
 use tiktok_business::{
-    apis::{get_business_comment_list, get_business_get, get_business_video_list},
+    apis::{get_business_comment_list, get_business_get, get_business_video_list, post_business_comment_reply_create},
     oauth::{TiktokOauth, TiktokScope},
     responses::{account::AccountField, video::VideoField},
 };
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use url::Url;
+use chrono::prelude::*;
 
 pub const CSRF_TOKEN: &str = "csrf_token";
 
@@ -66,6 +67,21 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
         println!("{:?}", res);
         let video_id = res.body.data.as_ref().unwrap().videos.as_ref().unwrap().get(0).unwrap().item_id.as_ref().unwrap();
         let res = get_business_comment_list::Api::new(&token_data.open_id, video_id)
+            .execute(&token_data.access_token)
+            .await
+            .unwrap();
+        println!("{:?}", res);
+        let comment = res.body.data.as_ref().unwrap().comments.as_ref().unwrap().get(0).unwrap();
+        let comment_id = comment.comment_id.as_ref().unwrap();
+        let username = comment.username.as_ref().unwrap();
+        let body = post_business_comment_reply_create::Body {
+            business_id: token_data.open_id.clone(),
+            video_id: video_id.to_owned(),
+            comment_id: comment_id.to_owned(),
+            text: format!("予定表～①💖ﾊﾝｶｸだ{} @{}", Utc::now(), username),
+        };
+        println!("{:?}", body);
+        let res = post_business_comment_reply_create::Api::new(body)
             .execute(&token_data.access_token)
             .await
             .unwrap();
