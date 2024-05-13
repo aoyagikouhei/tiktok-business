@@ -6,7 +6,7 @@ pub struct ImpressionSource {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub impression_source: Option<ImpressionSourceEnum>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub percentage: Option<String>,
+    pub percentage: Option<f64>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

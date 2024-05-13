@@ -6,9 +6,9 @@ use axum::{
 };
 use std::collections::HashMap;
 use tiktok_business::{
-    apis::get_business_get,
+    apis::{get_business_comment_list, get_business_get, get_business_video_list},
     oauth::{TiktokOauth, TiktokScope},
-    responses::account::AccountField,
+    responses::{account::AccountField, video::VideoField},
 };
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
 use url::Url;
@@ -55,6 +55,17 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
     println!("{:?}", res);
     if let Some(token_data) = res.0.data {
         let res = get_business_get::Api::new(&token_data.open_id, AccountField::all())
+            .execute(&token_data.access_token)
+            .await
+            .unwrap();
+        println!("{:?}", res);
+        let res = get_business_video_list::Api::new(&token_data.open_id, VideoField::all())
+            .execute(&token_data.access_token)
+            .await
+            .unwrap();
+        println!("{:?}", res);
+        let video_id = res.body.data.as_ref().unwrap().videos.as_ref().unwrap().get(0).unwrap().item_id.as_ref().unwrap();
+        let res = get_business_comment_list::Api::new(&token_data.open_id, video_id)
             .execute(&token_data.access_token)
             .await
             .unwrap();

@@ -58,4 +58,4 @@ response:
         cursor:
           type: int
         has_more:
-          type: boolean
+          type: bool

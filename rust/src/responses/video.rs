@@ -19,7 +19,7 @@ pub struct Video {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub video_views: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub video_duration: Option<String>,
+    pub video_duration: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub likes: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -29,11 +29,11 @@ pub struct Video {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reach: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub full_video_watched_rate: Option<String>,
+    pub full_video_watched_rate: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub total_time_watched: Option<String>,
+    pub total_time_watched: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub average_time_watched: Option<String>,
+    pub average_time_watched: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub impression_sources: Option<Vec<ImpressionSource>>,
     #[serde(skip_serializing_if = "Option::is_none")]

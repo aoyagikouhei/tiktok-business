@@ -20,6 +20,8 @@ def make_response_type(key, value)
     "i64"
   when "bool" then
     "bool"
+  when "float" then
+    "f64"
   when "array" then
     "Vec<#{make_items_type(value[:items])}>"
   when "object" then

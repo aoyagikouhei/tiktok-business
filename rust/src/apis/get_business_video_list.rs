@@ -100,7 +100,7 @@ pub struct Data {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cursor: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub has_more: Option<String>,
+    pub has_more: Option<bool>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
