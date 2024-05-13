@@ -82,6 +82,9 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
             .as_ref()
             .unwrap();
         let res = get_business_comment_list::Api::new(&token_data.open_id, video_id, None)
+            .sort_field(get_business_comment_list::SortField::CreateTime)
+            .sort_order(get_business_comment_list::SortOrder::Desc)
+            .max_count(30)
             .execute(&token_data.access_token)
             .await
             .unwrap();
@@ -105,13 +108,11 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
             text: format!("予定表～①💖ﾊﾝｶｸだ{} @{}", Utc::now(), username),
         };
         println!("{:?}", body);
-        /*
         let res = post_business_comment_reply_create::Api::new(body, None)
             .execute(&token_data.access_token)
             .await
             .unwrap();
         println!("{:?}", res);
-         */
     }
 
     "success".into_response()
