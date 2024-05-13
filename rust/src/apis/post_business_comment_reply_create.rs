@@ -1,4 +1,4 @@
-use crate::responses::comment::Comment;
+use crate::responses::create_reply::CreateReply;
 use crate::{
     apis::{execute_api, make_url, ApiOptions, ApiResponse},
     error::Error as ApiError,
@@ -43,14 +43,11 @@ impl Api {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
+    pub request_id: String,
+    pub code: i64,
+    pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub request_id: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub code: Option<i64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub message: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Comment>,
+    pub data: Option<CreateReply>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }

@@ -20,10 +20,13 @@ response:
   type: object
   properties:
     request_id:
+      required: true
       type: string
     code:
+      required: true
       type: int
     message:
+      required: true
       type: string
     data:
       type: object
