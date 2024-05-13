@@ -3,6 +3,7 @@ use chrono::prelude::*;
 pub mod get_business_comment_list;
 pub mod get_business_get;
 pub mod get_business_video_list;
+pub mod post_business_comment_reply_create;
 
 pub fn make_url(postfix: &str) -> String {
     format!("{}{}", URL_PREFIX, postfix)
