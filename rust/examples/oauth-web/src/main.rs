@@ -37,7 +37,6 @@ fn oauth_client() -> TiktokOauth {
         &std::env::var("CALLBACK_URL").unwrap(),
         TiktokScope::tiktok_accounts(),
     )
-    .unwrap()
 }
 
 async fn root(cookies: Cookies) -> impl IntoResponse {

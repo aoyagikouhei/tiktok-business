@@ -38,13 +38,13 @@ impl TiktokOauth {
         client_secret: &str,
         callback_url: &str,
         scopes: Vec<TiktokScope>,
-    ) -> Result<Self, Error> {
-        Ok(Self {
+    ) -> Self {
+        Self {
             callback_url: callback_url.to_owned(),
             scopes,
             client_key: client_key.to_owned(),
             client_secret: client_secret.to_owned(),
-        })
+        }
     }
 
     pub fn oauth_url(&self, state: Option<String>) -> OAuthUrlResult {
