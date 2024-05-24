@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use crate::{error::Error, URL_PREFIX};
 use base64::prelude::{Engine as _, BASE64_URL_SAFE_NO_PAD};
 use itertools::Itertools;
@@ -25,11 +27,17 @@ pub struct OAuthUrlResult {
     pub csrf_token: String,
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct TiktokOauthOptions {
+    timeout: Option<Duration>,
+}
+
 pub struct TiktokOauth {
     scopes: Vec<TiktokScope>,
     client_key: String,
     client_secret: String,
     callback_url: String,
+    options: Option<TiktokOauthOptions>,
 }
 
 impl TiktokOauth {
@@ -39,11 +47,22 @@ impl TiktokOauth {
         callback_url: &str,
         scopes: Vec<TiktokScope>,
     ) -> Self {
+        Self::new_with_options(client_key, client_secret, callback_url, scopes, None)
+    }
+
+    pub fn new_with_options(
+        client_key: &str,
+        client_secret: &str,
+        callback_url: &str,
+        scopes: Vec<TiktokScope>,
+        options: Option<TiktokOauthOptions>,
+    ) -> Self {
         Self {
             callback_url: callback_url.to_owned(),
             scopes,
             client_key: client_key.to_owned(),
             client_secret: client_secret.to_owned(),
+            options,
         }
     }
 
@@ -69,7 +88,7 @@ impl TiktokOauth {
             "auth_code": code,
             "redirect_uri": self.callback_url
         });
-        make_response(TOKEN_URL, &json).await
+        make_response(TOKEN_URL, &json, &self.options).await
     }
 
     pub async fn refresh(&self, refresh_token: &str) -> Result<(TokenResponse, StatusCode), Error> {
@@ -79,7 +98,7 @@ impl TiktokOauth {
             "grant_type": "refresh_token",
             "refresh_token": refresh_token,
         });
-        make_response(REFRESH_TOKEN_URL, &json).await
+        make_response(REFRESH_TOKEN_URL, &json, &self.options).await
     }
 
     pub async fn revoke(&self, access_token: &str) -> Result<(RevokeResponse, StatusCode), Error> {
@@ -88,7 +107,7 @@ impl TiktokOauth {
             "client_secret": self.client_secret,
             "access_token": access_token,
         });
-        make_response(REVOKE_URL, &json).await
+        make_response(REVOKE_URL, &json, &self.options).await
     }
 
     pub async fn token_info(
@@ -99,21 +118,30 @@ impl TiktokOauth {
             "app_id": self.client_key,
             "access_token": access_token,
         });
-        make_response(TOKEN_INFO_URL, &json).await
+        make_response(TOKEN_INFO_URL, &json, &self.options).await
     }
 }
 
 async fn execute_send(
     url: &str,
     json: &serde_json::Value,
+    options: &Option<TiktokOauthOptions>,
 ) -> Result<reqwest::Response, reqwest::Error> {
     let url = format!("{}{}", URL_PREFIX, url);
-    reqwest::Client::new()
+    let builder = reqwest::Client::new()
         .post(url)
         .header(CACHE_CONTROL, "no-cache")
-        .json(json)
-        .send()
-        .await
+        .json(json);
+    let builder = if let Some(options) = options {
+        if let Some(timeout) = options.timeout {
+            builder.timeout(timeout)
+        } else {
+            builder
+        }
+    } else {
+        builder
+    };
+    builder.send().await
 }
 
 fn csrf_token() -> String {
@@ -121,11 +149,15 @@ fn csrf_token() -> String {
     BASE64_URL_SAFE_NO_PAD.encode(random_bytes)
 }
 
-async fn make_response<T>(url: &str, json: &serde_json::Value) -> Result<(T, StatusCode), Error>
+async fn make_response<T>(
+    url: &str,
+    json: &serde_json::Value,
+    options: &Option<TiktokOauthOptions>,
+) -> Result<(T, StatusCode), Error>
 where
     T: DeserializeOwned,
 {
-    let response = execute_send(url, json).await?;
+    let response = execute_send(url, json, options).await?;
     let status_code = response.status();
     let res: T = response.json().await?;
     Ok((res, status_code))

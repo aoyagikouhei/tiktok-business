@@ -1,6 +1,6 @@
 use crate::responses::comment::Comment;
 use crate::{
-    apis::{execute_api, make_url, ApiOptions, ApiResponse},
+    apis::{apply_options, execute_api, make_url, ApiOptions, ApiResponse},
     error::Error as ApiError,
 };
 use reqwest::RequestBuilder;
@@ -171,11 +171,11 @@ impl Api {
         if let Some(max_count) = self.max_count {
             query_parameters.push(("max_count", max_count.to_string()));
         }
-        let client = reqwest::Client::new();
-        client
+        let client = reqwest::Client::new()
             .get(make_url(URL, &self.options))
             .query(&query_parameters)
-            .header("Access-Token", bearer_code)
+            .header("Access-Token", bearer_code);
+        apply_options(client, &self.options)
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {

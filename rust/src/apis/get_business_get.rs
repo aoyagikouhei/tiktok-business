@@ -1,7 +1,7 @@
 use crate::responses::account::Account;
 use crate::responses::account::AccountField;
 use crate::{
-    apis::{execute_api, make_url, ApiOptions, ApiResponse},
+    apis::{apply_options, execute_api, make_url, ApiOptions, ApiResponse},
     error::Error as ApiError,
 };
 use itertools::Itertools;
@@ -58,11 +58,11 @@ impl Api {
         if let Some(end_date) = self.end_date {
             query_parameters.push(("end_date", end_date));
         }
-        let client = reqwest::Client::new();
-        client
+        let client = reqwest::Client::new()
             .get(make_url(URL, &self.options))
             .query(&query_parameters)
-            .header("Access-Token", bearer_code)
+            .header("Access-Token", bearer_code);
+        apply_options(client, &self.options)
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {

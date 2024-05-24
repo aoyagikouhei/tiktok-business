@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use crate::{error::Error, URL_PREFIX};
 use chrono::prelude::*;
 use reqwest::{header::HeaderMap, RequestBuilder, StatusCode};
@@ -46,6 +48,7 @@ fn make_url_with_prefix(
 #[derive(Debug, Clone, Default)]
 pub struct ApiOptions {
     pub prefix_url: Option<String>,
+    pub timeout: Option<Duration>,
 }
 
 #[derive(Debug)]
@@ -99,4 +102,17 @@ fn make_response_header(header: &HeaderMap) -> Option<ResponseHeader> {
         date: date.to_utc(),
         x_tt_log_id: x_tt_log_id.to_owned(),
     })
+}
+
+pub(crate) fn apply_options(
+    client: RequestBuilder,
+    options: &Option<ApiOptions>,
+) -> RequestBuilder {
+    let Some(options) = options else {
+        return client;
+    };
+    let Some(timeout) = options.timeout else {
+        return client;
+    };
+    client.timeout(timeout)
 }

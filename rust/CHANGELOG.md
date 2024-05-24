@@ -1,5 +1,8 @@
 # Changes
 
+## v0.2.1 (2024/05/24)
+* Add timeout options and oauth
+
 ## v0.2.0 (2024/05/21)
 * modify TiktokOauth new 
 

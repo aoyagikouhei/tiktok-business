@@ -1,6 +1,6 @@
 use crate::responses::create_reply::CreateReply;
 use crate::{
-    apis::{execute_api, make_url, ApiOptions, ApiResponse},
+    apis::{apply_options, execute_api, make_url, ApiOptions, ApiResponse},
     error::Error as ApiError,
 };
 use reqwest::RequestBuilder;
@@ -29,11 +29,11 @@ impl Api {
 
     #[allow(clippy::vec_init_then_push)]
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
-        let client = reqwest::Client::new();
-        client
+        let client = reqwest::Client::new()
             .post(make_url(URL, &self.options))
             .json(&self.body)
-            .header("Access-Token", bearer_code)
+            .header("Access-Token", bearer_code);
+        apply_options(client, &self.options)
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {
