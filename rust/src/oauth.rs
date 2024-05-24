@@ -29,7 +29,7 @@ pub struct OAuthUrlResult {
 
 #[derive(Debug, Clone, Default)]
 pub struct TiktokOauthOptions {
-    timeout: Option<Duration>,
+    pub timeout: Option<Duration>,
 }
 
 pub struct TiktokOauth {
