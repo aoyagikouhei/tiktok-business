@@ -5,7 +5,8 @@ use std::collections::HashSet;
 <% end %>use reqwest::RequestBuilder;
 use serde::{Serialize, Deserialize};
 use crate::{
-    apis::{make_url, execute_api, apply_options, ApiResponse, ApiOptions},
+    options::{make_url, apply_options, TiktokOptions},
+    apis::{execute_api, ApiResponse},
     error::Error as ApiError,
 };
 

@@ -1,7 +1,8 @@
 use crate::responses::comment::Comment;
 use crate::{
-    apis::{apply_options, execute_api, make_url, ApiOptions, ApiResponse},
+    apis::{execute_api, ApiResponse},
     error::Error as ApiError,
+    options::{apply_options, make_url, TiktokOptions},
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -10,7 +11,7 @@ const URL: &str = "/business/comment/list/";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    options: Option<ApiOptions>,
+    options: Option<TiktokOptions>,
     business_id: String,
     video_id: String,
     comment_ids: Option<Vec<String>>,
@@ -98,7 +99,7 @@ impl Default for SortOrder {
 }
 
 impl Api {
-    pub fn new(business_id: &str, video_id: &str, options: Option<ApiOptions>) -> Self {
+    pub fn new(business_id: &str, video_id: &str, options: Option<TiktokOptions>) -> Self {
         Self {
             options,
             business_id: business_id.to_owned(),

@@ -1,6 +1,7 @@
-use std::time::Duration;
-
-use crate::{error::Error, URL_PREFIX};
+use crate::{
+    error::Error,
+    options::{apply_options, make_url, TiktokOptions},
+};
 use base64::prelude::{Engine as _, BASE64_URL_SAFE_NO_PAD};
 use itertools::Itertools;
 use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
@@ -27,17 +28,12 @@ pub struct OAuthUrlResult {
     pub csrf_token: String,
 }
 
-#[derive(Debug, Clone, Default)]
-pub struct TiktokOauthOptions {
-    pub timeout: Option<Duration>,
-}
-
 pub struct TiktokOauth {
     scopes: Vec<TiktokScope>,
     client_key: String,
     client_secret: String,
     callback_url: String,
-    options: Option<TiktokOauthOptions>,
+    options: Option<TiktokOptions>,
 }
 
 impl TiktokOauth {
@@ -55,7 +51,7 @@ impl TiktokOauth {
         client_secret: &str,
         callback_url: &str,
         scopes: Vec<TiktokScope>,
-        options: Option<TiktokOauthOptions>,
+        options: Option<TiktokOptions>,
     ) -> Self {
         Self {
             callback_url: callback_url.to_owned(),
@@ -125,23 +121,13 @@ impl TiktokOauth {
 async fn execute_send(
     url: &str,
     json: &serde_json::Value,
-    options: &Option<TiktokOauthOptions>,
+    options: &Option<TiktokOptions>,
 ) -> Result<reqwest::Response, reqwest::Error> {
-    let url = format!("{}{}", URL_PREFIX, url);
     let builder = reqwest::Client::new()
-        .post(url)
+        .post(make_url(url, options))
         .header(CACHE_CONTROL, "no-cache")
         .json(json);
-    let builder = if let Some(options) = options {
-        if let Some(timeout) = options.timeout {
-            builder.timeout(timeout)
-        } else {
-            builder
-        }
-    } else {
-        builder
-    };
-    builder.send().await
+    apply_options(builder, options).send().await
 }
 
 fn csrf_token() -> String {
@@ -152,7 +138,7 @@ fn csrf_token() -> String {
 async fn make_response<T>(
     url: &str,
     json: &serde_json::Value,
-    options: &Option<TiktokOauthOptions>,
+    options: &Option<TiktokOptions>,
 ) -> Result<(T, StatusCode), Error>
 where
     T: DeserializeOwned,

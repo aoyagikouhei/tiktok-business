@@ -1,8 +1,9 @@
 use crate::responses::video::Video;
 use crate::responses::video::VideoField;
 use crate::{
-    apis::{apply_options, execute_api, make_url, ApiOptions, ApiResponse},
+    apis::{execute_api, ApiResponse},
     error::Error as ApiError,
+    options::{apply_options, make_url, TiktokOptions},
 };
 use itertools::Itertools;
 use reqwest::RequestBuilder;
@@ -13,7 +14,7 @@ const URL: &str = "/business/video/list/";
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    options: Option<ApiOptions>,
+    options: Option<TiktokOptions>,
     business_id: String,
     fields: HashSet<VideoField>,
     cursor: Option<usize>,
@@ -24,7 +25,7 @@ impl Api {
     pub fn new(
         business_id: &str,
         fields: HashSet<VideoField>,
-        options: Option<ApiOptions>,
+        options: Option<TiktokOptions>,
     ) -> Self {
         Self {
             options,

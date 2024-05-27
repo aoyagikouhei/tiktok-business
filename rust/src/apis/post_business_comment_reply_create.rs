@@ -1,7 +1,8 @@
 use crate::responses::create_reply::CreateReply;
 use crate::{
-    apis::{apply_options, execute_api, make_url, ApiOptions, ApiResponse},
+    apis::{execute_api, ApiResponse},
     error::Error as ApiError,
+    options::{apply_options, make_url, TiktokOptions},
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
@@ -18,12 +19,12 @@ pub struct Body {
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
-    options: Option<ApiOptions>,
+    options: Option<TiktokOptions>,
     body: Body,
 }
 
 impl Api {
-    pub fn new(body: Body, options: Option<ApiOptions>) -> Self {
+    pub fn new(body: Body, options: Option<TiktokOptions>) -> Self {
         Self { options, body }
     }
 

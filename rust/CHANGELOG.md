@@ -1,5 +1,8 @@
 # Changes
 
+## v0.3.0 (2024/05/27)
+* Merge oauth and api Options
+
 ## v0.2.2 (2024/05/24)
 * Modify TiktokOauthOptions
 

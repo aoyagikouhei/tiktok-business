@@ -1,6 +1,4 @@
-use std::time::Duration;
-
-use crate::{error::Error, URL_PREFIX};
+use crate::error::Error;
 use chrono::prelude::*;
 use reqwest::{header::HeaderMap, RequestBuilder, StatusCode};
 use serde::de::DeserializeOwned;
@@ -9,47 +7,6 @@ pub mod get_business_comment_list;
 pub mod get_business_get;
 pub mod get_business_video_list;
 pub mod post_business_comment_reply_create;
-
-const ENV_KEY: &str = "TICTOK_BUSINESS_PREFIX_API";
-
-pub fn clear_prefix_url() {
-    std::env::set_var(ENV_KEY, URL_PREFIX);
-}
-
-pub fn setup_prefix_url(url: &str) {
-    std::env::set_var(ENV_KEY, url);
-}
-
-pub(crate) fn make_url(postfix_url: &str, options: &Option<ApiOptions>) -> String {
-    make_url_with_prefix(
-        &std::env::var(ENV_KEY).unwrap_or(URL_PREFIX.to_owned()),
-        options,
-        postfix_url,
-    )
-}
-
-fn make_url_with_prefix(
-    default_perfix_url: &str,
-    options: &Option<ApiOptions>,
-    postfix_url: &str,
-) -> String {
-    let prefix_url = if let Some(options) = options {
-        if let Some(prefix_url) = options.prefix_url.as_ref() {
-            prefix_url
-        } else {
-            default_perfix_url
-        }
-    } else {
-        default_perfix_url
-    };
-    format!("{}{}", prefix_url, postfix_url)
-}
-
-#[derive(Debug, Clone, Default)]
-pub struct ApiOptions {
-    pub prefix_url: Option<String>,
-    pub timeout: Option<Duration>,
-}
 
 #[derive(Debug)]
 pub struct ApiResponse<T> {
@@ -102,17 +59,4 @@ fn make_response_header(header: &HeaderMap) -> Option<ResponseHeader> {
         date: date.to_utc(),
         x_tt_log_id: x_tt_log_id.to_owned(),
     })
-}
-
-pub(crate) fn apply_options(
-    client: RequestBuilder,
-    options: &Option<ApiOptions>,
-) -> RequestBuilder {
-    let Some(options) = options else {
-        return client;
-    };
-    let Some(timeout) = options.timeout else {
-        return client;
-    };
-    client.timeout(timeout)
 }
