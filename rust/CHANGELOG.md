@@ -1,5 +1,8 @@
 # Changes
 
+## v0.3.1 (2024/05/27)
+* Merge oauth and api Options
+
 ## v0.3.0 (2024/05/27)
 * Merge oauth and api Options
 

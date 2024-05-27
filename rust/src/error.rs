@@ -7,7 +7,7 @@ pub enum Error {
     #[error("Timeout")]
     Timeout,
 
-    #[error("Other {0}")]
+    #[error("Other {0}, {1}")]
     Other(String, StatusCode),
 
     #[error("OAuth {0:?}, {1}")]
