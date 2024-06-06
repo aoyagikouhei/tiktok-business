@@ -10,6 +10,8 @@ pub struct Reply {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub user_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub unique_identifier: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_time: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<String>,
@@ -73,6 +75,7 @@ pub enum ReplyField {
     CommentId,
     VideoId,
     UserId,
+    UniqueIdentifier,
     CreateTime,
     Text,
     Likes,
@@ -92,6 +95,7 @@ impl ReplyField {
         set.insert(ReplyField::CommentId);
         set.insert(ReplyField::VideoId);
         set.insert(ReplyField::UserId);
+        set.insert(ReplyField::UniqueIdentifier);
         set.insert(ReplyField::CreateTime);
         set.insert(ReplyField::Text);
         set.insert(ReplyField::Likes);
@@ -113,6 +117,7 @@ impl std::fmt::Display for ReplyField {
             Self::CommentId => write!(f, "comment_id"),
             Self::VideoId => write!(f, "video_id"),
             Self::UserId => write!(f, "user_id"),
+            Self::UniqueIdentifier => write!(f, "unique_identifier"),
             Self::CreateTime => write!(f, "create_time"),
             Self::Text => write!(f, "text"),
             Self::Likes => write!(f, "likes"),

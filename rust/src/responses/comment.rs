@@ -11,6 +11,8 @@ pub struct Comment {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub user_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub unique_identifier: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub create_time: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<String>,
@@ -81,6 +83,7 @@ pub enum CommentField {
     CommentId,
     VideoId,
     UserId,
+    UniqueIdentifier,
     CreateTime,
     Text,
     Likes,
@@ -101,6 +104,7 @@ impl CommentField {
         set.insert(CommentField::CommentId);
         set.insert(CommentField::VideoId);
         set.insert(CommentField::UserId);
+        set.insert(CommentField::UniqueIdentifier);
         set.insert(CommentField::CreateTime);
         set.insert(CommentField::Text);
         set.insert(CommentField::Likes);
@@ -123,6 +127,7 @@ impl std::fmt::Display for CommentField {
             Self::CommentId => write!(f, "comment_id"),
             Self::VideoId => write!(f, "video_id"),
             Self::UserId => write!(f, "user_id"),
+            Self::UniqueIdentifier => write!(f, "unique_identifier"),
             Self::CreateTime => write!(f, "create_time"),
             Self::Text => write!(f, "text"),
             Self::Likes => write!(f, "likes"),

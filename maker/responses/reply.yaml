@@ -9,6 +9,8 @@ response:
       type: string
     user_id:
       type: string
+    unique_identifier:
+      type: string
     create_time:
       type: string
     text:
