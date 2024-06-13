@@ -19,6 +19,18 @@ pub struct Api {
     fields: HashSet<VideoField>,
     cursor: Option<usize>,
     max_count: Option<usize>,
+    filters: Option<Filters>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Filters {
+    pub video_ids: Vec<String>,
+}
+
+impl std::fmt::Display for Filters {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
+    }
 }
 
 impl Api {
@@ -45,6 +57,11 @@ impl Api {
         self
     }
 
+    pub fn filters(mut self, value: Filters) -> Self {
+        self.filters = Some(value);
+        self
+    }
+
     #[allow(clippy::vec_init_then_push)]
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
         let mut query_parameters = vec![];
@@ -58,6 +75,9 @@ impl Api {
         }
         if let Some(max_count) = self.max_count {
             query_parameters.push(("max_count", max_count.to_string()));
+        }
+        if let Some(filters) = self.filters {
+            query_parameters.push(("filters", filters.to_string()));
         }
         let client = reqwest::Client::new()
             .get(make_url(URL, &self.options))

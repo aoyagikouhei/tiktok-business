@@ -1,5 +1,8 @@
 # Changes
 
+## v0.3.3 (2024/06/13)
+* Add filters in get_business_video_list
+
 ## v0.3.2 (2024/06/06)
 * Add comment and reply unique_identifier
 

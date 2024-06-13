@@ -16,6 +16,14 @@ queries:
     type: int
     min: 10
     max: 20
+  - name: filters
+    type: object
+    properties:
+      video_ids:
+        required: true
+        type: array
+        items:
+          type: string
 response:
   type: object
   properties:

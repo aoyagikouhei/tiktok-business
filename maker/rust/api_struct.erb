@@ -11,6 +11,10 @@ def make_type(it)
       name = it[:name].ucc
       @enum_request[name] = it[:value]
       name
+    when "object" then
+      name = it[:name].ucc
+      @object_request[name] = it[:properties]
+      name
     when "bool" then
       "bool"
     when "array" then
@@ -50,3 +54,16 @@ pub struct Api {
       fn default() -> Self { Self::<%= ary.first.ucc %> }
   }
   <% end %>
+
+<% @object_request.each_pair do |key, map| %>
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct <%= key %> {<% map.each_pair do |item_key, item_value| %>
+    pub <%= item_key %>: <%= make_type(item_value) %>,<% end %>
+}
+
+impl std::fmt::Display for <%= key %> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
+    }
+}
+    <% end %>

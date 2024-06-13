@@ -96,6 +96,7 @@ def execute_apis(path)
   @fields = []
   @enum_flag = false
   @enum_request = {}
+  @object_request = {}
 
   queries = yml[:queries] || []
   required_queries = queries.filter{|it| it[:required]}
