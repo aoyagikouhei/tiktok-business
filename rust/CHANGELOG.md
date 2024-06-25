@@ -1,5 +1,8 @@
 # Changes
 
+## v0.4.0 (2024/06/26)
+* Add webhook events
+
 ## v0.3.3 (2024/06/13)
 * Add filters in get_business_video_list
 
