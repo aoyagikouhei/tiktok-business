@@ -1,3 +1,6 @@
+use chrono::{prelude::*, Duration};
+use hex;
+use hmac_sha256::HMAC;
 use serde::{Deserialize, Serialize};
 use strum::EnumString;
 
@@ -106,4 +109,70 @@ pub struct PostPublishNoLongerPubliclyAvailable {
     pub publish_id: String,
     pub post_id: String,
     pub publish_type: PublishType,
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct TikTokSignature {
+    t_str: String,
+    t: DateTime<Utc>,
+    s: String,
+}
+
+impl TikTokSignature {
+    pub fn new(src: &str) -> Option<Self> {
+        let v: Vec<&str> = src.split(',').collect();
+        if v.len() <= 2 {
+            return None;
+        }
+        let t_str = calc_signature_one(v[0])?;
+        let t = str_to_timestamp(&t_str)?;
+        let s = calc_signature_one(v[1])?;
+        Some(TikTokSignature { t_str, t, s })
+    }
+
+    pub fn get_time(&self) -> DateTime<Utc> {
+        self.t
+    }
+
+    pub fn check(&self, secret: &str, payload: &str, delay: &Option<Duration>) -> bool {
+        // シグネチャーを計算
+        let mut combinate = self.t_str.clone();
+        combinate.push_str(payload);
+        let key = secret.as_bytes();
+        let data = combinate.as_bytes();
+        let Ok(expected_signature) = hex::decode(&self.s) else {
+            return false;
+        };
+        let calculated_signature = HMAC::mac(key, data);
+
+        // シグネチャーの比較
+        if expected_signature != calculated_signature {
+            return false;
+        }
+
+        // 時間の比較
+        if let Some(delay) = delay {
+            let now = Utc::now();
+            let diff = now - self.t;
+            if diff > *delay {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+fn calc_signature_one(src: &str) -> Option<String> {
+    let ary: Vec<&str> = src.split('=').collect();
+    if ary.len() != 2 {
+        return None;
+    }
+    Some(ary[1].to_string())
+}
+
+fn str_to_timestamp(src: &str) -> Option<DateTime<Utc>> {
+    match src.parse::<i64>() {
+        Ok(timestamp) => Utc.timestamp_opt(timestamp, 0).single(),
+        Err(_) => None,
+    }
 }
