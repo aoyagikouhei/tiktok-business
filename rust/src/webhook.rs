@@ -1,8 +1,10 @@
 use chrono::{prelude::*, Duration};
-use hex;
-use hmac_sha256::HMAC;
 use serde::{Deserialize, Serialize};
 use strum::EnumString;
+
+use hmac::{Hmac, Mac};
+use sha2::Sha256;
+type HmacSha256 = Hmac<Sha256>;
 
 #[derive(Debug, PartialEq, EnumString, Serialize, Deserialize, Clone)]
 pub enum EventType {
@@ -121,7 +123,7 @@ pub struct TikTokSignature {
 impl TikTokSignature {
     pub fn new(src: &str) -> Option<Self> {
         let v: Vec<&str> = src.split(',').collect();
-        if v.len() <= 2 {
+        if v.len() < 2 {
             return None;
         }
         let t_str = calc_signature_one(v[0])?;
@@ -137,16 +139,19 @@ impl TikTokSignature {
     pub fn check(&self, secret: &str, payload: &str, delay: &Option<Duration>) -> bool {
         // シグネチャーを計算
         let mut combinate = self.t_str.clone();
+        combinate.push('.');
         combinate.push_str(payload);
         let key = secret.as_bytes();
         let data = combinate.as_bytes();
-        let Ok(expected_signature) = hex::decode(&self.s) else {
-            return false;
+        let mut mac = match HmacSha256::new_from_slice(key) {
+            Ok(m) => m,
+            Err(_) => return false,
         };
-        let calculated_signature = HMAC::mac(key, data);
-
-        // シグネチャーの比較
-        if expected_signature != calculated_signature {
+        mac.update(data);
+        let result = mac.finalize();
+        let code_bytes = result.into_bytes();
+        let code = hex::encode(code_bytes);
+        if code != self.s {
             return false;
         }
 
@@ -174,5 +179,30 @@ fn str_to_timestamp(src: &str) -> Option<DateTime<Utc>> {
     match src.parse::<i64>() {
         Ok(timestamp) => Utc.timestamp_opt(timestamp, 0).single(),
         Err(_) => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // CLIENT_SECRET=xxx cargo test --all-features test_webhook_tiktok_signature -- --nocapture --test-threads=1
+    #[test]
+    fn test_webhook_tiktok_signature() -> anyhow::Result<()> {
+        let ts = TikTokSignature::new(
+            "t=1719535951,s=8fe2ba9977654ca3fdb961d65a7c473f115ca2e0da70612b8d990eaf87f2076f",
+        )
+        .ok_or(anyhow::anyhow!("Failed to create TikTokSignature"))?;
+        assert_eq!(
+            ts.get_time(),
+            Utc.timestamp_opt(1719535951, 0).single().unwrap()
+        );
+        let body = r#"{"client_key":"7364323437050855441","event":"comment.update","create_time":1719535947,"user_openid":"-000iamDUYtb1xGiL_6b00YmkR30hEEnFSUH","content":"{\"comment_id\":7385350567722402578,\"video_id\":7377694258502880513,\"parent_comment_id\":0,\"comment_type\":\"comment\",\"comment_action\":\"insert\",\"timestamp\":1719535947074,\"unique_identifier\":\"+ZMA8o3/HUkeWO07eRsqqLCajf4TIdVQeVHPg2CXbcpQGCHme4+gBUwYlf/WFyK+\"}"}"#;
+        let secret = std::env::var("CLIENT_SECRET").unwrap_or_default();
+        assert!(ts.check(&secret, body, &None));
+        assert!(!ts.check(&secret, body, &Some(Duration::seconds(10))));
+        //assert!(ts.check(&secret, body, &Some(Duration::days(10))));
+
+        Ok(())
     }
 }

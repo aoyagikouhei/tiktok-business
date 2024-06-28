@@ -1,5 +1,9 @@
 # Changes
 
+## v0.4.2 (2024/06/28)
+* Modify calc webhook signature
+* webhook optional
+
 ## v0.4.1 (2024/06/26)
 * Add calc webhook signature
 

@@ -10,5 +10,9 @@
 			"path": "rust/examples/oauth-web"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"rust-analyzer.cargo.features": [
+			"webhook",
+		],
+	}
 }
