@@ -1,5 +1,8 @@
 # Changes
 
+## v0.4.3 (2024/06/28)
+* Modify webhook serialize
+
 ## v0.4.2 (2024/06/28)
 * Modify calc webhook signature
 * webhook optional

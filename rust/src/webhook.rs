@@ -8,54 +8,68 @@ type HmacSha256 = Hmac<Sha256>;
 
 #[derive(Debug, PartialEq, EnumString, Serialize, Deserialize, Clone)]
 pub enum EventType {
+    #[serde(rename = "authorization.removed")]
     #[strum(serialize = "authorization.removed")]
     AuthorizationRemoved,
 
+    #[serde(rename = "post.publish.failed")]
     #[strum(serialize = "post.publish.failed")]
     PostPublishFailed,
 
+    #[serde(rename = "post.publish.complete")]
     #[strum(serialize = "post.publish.complete")]
     PostPublishComplete,
 
+    #[serde(rename = "post.publish.publicly_available")]
     #[strum(serialize = "post.publish.publicly_available")]
     PostPublishPubliclyAvailable,
 
+    #[serde(rename = "post.publish.no_longer_publicly_available")]
     #[strum(serialize = "post.publish.no_longer_publicly_available")]
     PostPublishNoLongerPubliclyAvailable,
 
+    #[serde(rename = "comment.update")]
     #[strum(serialize = "comment.update")]
     CommentUpdate,
 }
 
 #[derive(Debug, PartialEq, EnumString, Serialize, Deserialize, Clone)]
 pub enum CommentType {
+    #[serde(rename = "comment")]
     #[strum(serialize = "comment")]
     Comment,
 
+    #[serde(rename = "reply")]
     #[strum(serialize = "reply")]
     Reply,
 }
 
 #[derive(Debug, PartialEq, EnumString, Serialize, Deserialize, Clone)]
 pub enum CommentAction {
+    #[serde(rename = "insert")]
     #[strum(serialize = "insert")]
     Insert,
 
+    #[serde(rename = "delete")]
     #[strum(serialize = "delete")]
     Delete,
 
+    #[serde(rename = "set_to_hidden")]
     #[strum(serialize = "set_to_hidden")]
     SetToHidden,
 
+    #[serde(rename = "set_to_friends_only")]
     #[strum(serialize = "set_to_friends_only")]
     SetToFriendsOnly,
 
+    #[serde(rename = "set_to_public")]
     #[strum(serialize = "set_to_public")]
     SetToPublic,
 }
 
 #[derive(Debug, PartialEq, EnumString, Deserialize, Serialize, Clone)]
 pub enum PublishType {
+    #[serde(rename = "DIRECT_PUBLISH")]
     #[strum(serialize = "DIRECT_PUBLISH")]
     DirectPublish,
 }
@@ -202,6 +216,22 @@ mod tests {
         assert!(ts.check(&secret, body, &None));
         assert!(!ts.check(&secret, body, &Some(Duration::seconds(10))));
         //assert!(ts.check(&secret, body, &Some(Duration::days(10))));
+
+        Ok(())
+    }
+
+    // cargo test --all-features test_webhook_tiktok_webhook_event -- --nocapture --test-threads=1
+    #[test]
+    fn test_webhook_tiktok_webhook_event() -> anyhow::Result<()> {
+        let event = r#"{
+            "client_key": "7364323437050855441",
+            "event": "comment.update",
+            "create_time": 1719535947,
+            "user_openid": "-000iamDUYtb1xGiL_6b00YmkR30hEEnFSUH",
+            "content": "{\"comment_id\":7385350567722402578,\"video_id\":7377694258502880513,\"parent_comment_id\":0,\"comment_type\":\"comment\",\"comment_action\":\"insert\",\"timestamp\":1719535947074,\"unique_identifier\":\"+ZMA8o3/HUkeWO07eRsqqLCajf4TIdVQeVHPg2CXbcpQGCHme4+gBUwYlf/WFyK+\"}"
+        }"#;
+        let event = serde_json::from_str::<WebhookEvent>(event)?;
+        let _comment_content = serde_json::from_str::<CommentEvent>(&event.content)?;
 
         Ok(())
     }
