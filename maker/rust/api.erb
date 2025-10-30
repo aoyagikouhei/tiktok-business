@@ -5,7 +5,7 @@ use std::collections::HashSet;
 <% end %>use reqwest::RequestBuilder;
 use serde::{Serialize, Deserialize};
 use crate::{
-    options::{make_url, apply_options, TiktokOptions},
+    options::{make_url, apply_timeout, TiktokOptions},
     apis::{execute_api, ApiResponse},
     error::Error as ApiError,
 };
@@ -27,7 +27,7 @@ impl Api {
             .query(&query_parameters)<% end %><% if bodies.present? %>
             .json(&self.body)<% end %>
             .header("Access-Token", bearer_code);
-        apply_options(client, &self.options)
+        apply_timeout(client, &self.options)
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {

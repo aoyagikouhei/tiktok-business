@@ -1,12 +1,12 @@
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct AudienceActivity {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub hour: Option<String>,
+    pub hour: Option<String>, 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub count: Option<i64>,
+    pub count: Option<i64>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -15,11 +15,13 @@ impl AudienceActivity {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-            println!("AudienceActivity {:?}", self.extra);
+          println!("AudienceActivity {:?}", self.extra);
         }
         res
     }
 }
+
+
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum AudienceActivityField {
@@ -44,3 +46,5 @@ impl std::fmt::Display for AudienceActivityField {
         }
     }
 }
+
+

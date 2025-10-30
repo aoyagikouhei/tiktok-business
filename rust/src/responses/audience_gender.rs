@@ -1,12 +1,12 @@
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct AudienceGender {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub gender: Option<Gender>,
+    pub gender: Option<Gender>, 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub percentage: Option<f64>,
+    pub percentage: Option<f64>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -15,7 +15,7 @@ impl AudienceGender {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-            println!("AudienceGender {:?}", self.extra);
+          println!("AudienceGender {:?}", self.extra);
         }
         res
     }
@@ -42,10 +42,10 @@ impl std::fmt::Display for Gender {
 }
 
 impl Default for Gender {
-    fn default() -> Self {
-        Self::Female
-    }
+    fn default() -> Self { Self::Female }
 }
+
+
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum AudienceGenderField {
@@ -70,3 +70,5 @@ impl std::fmt::Display for AudienceGenderField {
         }
     }
 }
+
+

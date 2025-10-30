@@ -8,7 +8,9 @@ const ENV_KEY: &str = "TICTOK_BUSINESS_PREFIX_API";
 #[derive(Debug, Clone, Default)]
 pub struct TiktokOptions {
     pub prefix_url: Option<String>,
-    pub timeout: Option<Duration>,
+    pub timeout_duration: Option<Duration>,
+    pub try_count: Option<u8>,
+    pub retry_duration: Option<Duration>,
 }
 
 pub fn clear_prefix_url() {
@@ -46,12 +48,12 @@ fn make_url_with_prefix(
     format!("{}{}", prefix_url, postfix_url)
 }
 
-pub(crate) fn apply_options(
+pub(crate) fn apply_timeout(
     builder: RequestBuilder,
     options: &Option<TiktokOptions>,
 ) -> RequestBuilder {
     if let Some(options) = options {
-        if let Some(timeout) = options.timeout {
+        if let Some(timeout) = options.timeout_duration {
             builder.timeout(timeout)
         } else {
             builder

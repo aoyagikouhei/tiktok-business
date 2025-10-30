@@ -1,6 +1,6 @@
 use crate::{
     error::Error,
-    options::{TiktokOptions, apply_options, make_url},
+    options::{TiktokOptions, apply_timeout, make_url},
 };
 use base64::prelude::{BASE64_URL_SAFE_NO_PAD, Engine as _};
 use itertools::Itertools;
@@ -127,7 +127,7 @@ async fn execute_send(
         .post(make_url(url, options))
         .header(CACHE_CONTROL, "no-cache")
         .json(json);
-    apply_options(builder, options).send().await
+    apply_timeout(builder, options).send().await
 }
 
 fn csrf_token() -> String {

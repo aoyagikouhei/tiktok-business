@@ -1,12 +1,12 @@
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct ImpressionSource {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub impression_source: Option<ImpressionSourceEnum>,
+    pub impression_source: Option<ImpressionSourceEnum>, 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub percentage: Option<f64>,
+    pub percentage: Option<f64>, 
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -15,7 +15,7 @@ impl ImpressionSource {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-            println!("ImpressionSource {:?}", self.extra);
+          println!("ImpressionSource {:?}", self.extra);
         }
         res
     }
@@ -54,10 +54,10 @@ impl std::fmt::Display for ImpressionSourceEnum {
 }
 
 impl Default for ImpressionSourceEnum {
-    fn default() -> Self {
-        Self::ForYou
-    }
+    fn default() -> Self { Self::ForYou }
 }
+
+
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum ImpressionSourceField {
@@ -82,3 +82,5 @@ impl std::fmt::Display for ImpressionSourceField {
         }
     }
 }
+
+
