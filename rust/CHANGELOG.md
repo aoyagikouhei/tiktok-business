@@ -1,5 +1,11 @@
 # Changes
 
+## v0.5.0 (2025/10/31)
+* Update edtion 2025
+* Update libraries version
+* Modify apply_options to apply_timeout
+* Add try_count, try_duraiton to TiktokOptions 
+
 ## v0.4.3 (2024/06/28)
 * Modify webhook serialize
 
