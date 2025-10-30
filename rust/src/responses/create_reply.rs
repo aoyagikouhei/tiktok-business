@@ -1,14 +1,14 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct CreateReply {
-    pub comment_id: String, 
-    pub parent_comment_id: String, 
-    pub video_id: String, 
-    pub user_id: String, 
-    pub create_time: String, 
-    pub text: String, 
+    pub comment_id: String,
+    pub parent_comment_id: String,
+    pub video_id: String,
+    pub user_id: String,
+    pub create_time: String,
+    pub text: String,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -17,13 +17,11 @@ impl CreateReply {
     pub fn is_empty_extra(&self) -> bool {
         let res = self.extra.is_empty();
         if !res {
-          println!("CreateReply {:?}", self.extra);
+            println!("CreateReply {:?}", self.extra);
         }
         res
     }
 }
-
-
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum CreateReplyField {
@@ -60,5 +58,3 @@ impl std::fmt::Display for CreateReplyField {
         }
     }
 }
-
-

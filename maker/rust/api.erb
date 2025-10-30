@@ -31,7 +31,7 @@ impl Api {
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {
-        execute_api(self.build(bearer_code)).await
+        execute_api(|| self.clone().build(bearer_code), &self.options).await
     }
 }
 

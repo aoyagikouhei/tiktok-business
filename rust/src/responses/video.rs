@@ -1,60 +1,66 @@
-use crate::responses::{impression_source::ImpressionSource, audience_country::AudienceCountry};
+use crate::responses::{audience_country::AudienceCountry, impression_source::ImpressionSource};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Video {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub item_id: Option<String>, 
+    pub item_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub create_time: Option<String>, 
+    pub create_time: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub thumbnail_url: Option<String>, 
+    pub thumbnail_url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub share_url: Option<String>, 
+    pub share_url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub embed_url: Option<String>, 
+    pub embed_url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub caption: Option<String>, 
+    pub caption: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub video_views: Option<i64>, 
+    pub video_views: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub video_duration: Option<f64>, 
+    pub video_duration: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub likes: Option<i64>, 
+    pub likes: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub comments: Option<i64>, 
+    pub comments: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub shares: Option<i64>, 
+    pub shares: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub reach: Option<i64>, 
+    pub reach: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub full_video_watched_rate: Option<f64>, 
+    pub full_video_watched_rate: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub total_time_watched: Option<f64>, 
+    pub total_time_watched: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub average_time_watched: Option<f64>, 
+    pub average_time_watched: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub impression_sources: Option<Vec<ImpressionSource>>, 
+    pub impression_sources: Option<Vec<ImpressionSource>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub audience_countries: Option<Vec<AudienceCountry>>, 
+    pub audience_countries: Option<Vec<AudienceCountry>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Video {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.impression_sources.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true) &&
-        self.audience_countries.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .impression_sources
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true)
+            && self
+                .audience_countries
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true);
         if !res {
-          println!("Video {:?}", self.extra);
+            println!("Video {:?}", self.extra);
         }
         res
     }
 }
-
-
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum VideoField {
@@ -124,5 +130,3 @@ impl std::fmt::Display for VideoField {
         }
     }
 }
-
-

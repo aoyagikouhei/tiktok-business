@@ -1,18 +1,16 @@
-use itertools::Itertools;
-use std::collections::HashSet;
-use crate::responses::{video::Video};
-use crate::responses::{video::VideoField};
-use reqwest::RequestBuilder;
-use serde::{Serialize, Deserialize};
+use crate::responses::video::Video;
+use crate::responses::video::VideoField;
 use crate::{
-    options::{make_url, apply_timeout, TiktokOptions},
-    apis::{execute_api, ApiResponse},
+    apis::{ApiResponse, execute_api},
     error::Error as ApiError,
+    options::{TiktokOptions, apply_timeout, make_url},
 };
+use itertools::Itertools;
+use reqwest::RequestBuilder;
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 const URL: &str = "/business/video/list/";
-
-
 
 #[derive(Debug, Clone, Default)]
 pub struct Api {
@@ -24,9 +22,6 @@ pub struct Api {
     filters: Option<Filters>,
 }
 
-
-
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Filters {
     pub video_ids: Vec<String>,
@@ -37,10 +32,13 @@ impl std::fmt::Display for Filters {
         write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
-    
 
 impl Api {
-    pub fn new(business_id: &str, fields: HashSet<VideoField>, options: Option<TiktokOptions>) -> Self {
+    pub fn new(
+        business_id: &str,
+        fields: HashSet<VideoField>,
+        options: Option<TiktokOptions>,
+    ) -> Self {
         Self {
             options,
             business_id: business_id.to_owned(),
@@ -48,17 +46,17 @@ impl Api {
             ..Default::default()
         }
     }
-    
+
     pub fn cursor(mut self, value: usize) -> Self {
         self.cursor = Some(value);
         self
     }
-    
+
     pub fn max_count(mut self, value: usize) -> Self {
         self.max_count = Some(value);
         self
     }
-    
+
     pub fn filters(mut self, value: Filters) -> Self {
         self.filters = Some(value);
         self
@@ -66,10 +64,12 @@ impl Api {
 
     #[allow(clippy::vec_init_then_push)]
     pub fn build(self, bearer_code: &str) -> RequestBuilder {
-        
         let mut query_parameters = vec![];
         query_parameters.push(("business_id", self.business_id));
-        query_parameters.push(("fields", format!("[\"{}\"]", self.fields.iter().join("\",\""))));
+        query_parameters.push((
+            "fields",
+            format!("[\"{}\"]", self.fields.iter().join("\",\"")),
+        ));
         if let Some(cursor) = self.cursor {
             query_parameters.push(("cursor", cursor.to_string()));
         }
@@ -87,58 +87,59 @@ impl Api {
     }
 
     pub async fn execute(self, bearer_code: &str) -> Result<ApiResponse<Response>, ApiError> {
-        execute_api(self.build(bearer_code)).await
+        execute_api(|| self.clone().build(bearer_code), &self.options).await
     }
 }
 
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Response {
-    pub request_id: String, 
-    pub code: i64, 
-    pub message: String, 
+    pub request_id: String,
+    pub code: i64,
+    pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Data>, 
+    pub data: Option<Data>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Response {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.data.as_ref().map(|it| it.is_empty_extra()).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .data
+                .as_ref()
+                .map(|it| it.is_empty_extra())
+                .unwrap_or(true);
         if !res {
-          println!("Response {:?}", self.extra);
+            println!("Response {:?}", self.extra);
         }
         res
     }
 }
 
-
-
-
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub videos: Option<Vec<Video>>, 
+    pub videos: Option<Vec<Video>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub cursor: Option<i64>, 
+    pub cursor: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub has_more: Option<bool>, 
+    pub has_more: Option<bool>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Data {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.videos.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .videos
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true);
         if !res {
-          println!("Data {:?}", self.extra);
+            println!("Data {:?}", self.extra);
         }
         res
     }
 }
-
-

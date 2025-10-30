@@ -1,41 +1,43 @@
-use crate::responses::{audience_activity::AudienceActivity};
+use crate::responses::audience_activity::AudienceActivity;
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Metric {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub date: Option<String>, 
+    pub date: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub followers_count: Option<i64>, 
+    pub followers_count: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub profile_views: Option<i64>, 
+    pub profile_views: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub video_views: Option<i64>, 
+    pub video_views: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub likes: Option<i64>, 
+    pub likes: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub comments: Option<i64>, 
+    pub comments: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub shares: Option<i64>, 
+    pub shares: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub audience_activity: Option<Vec<AudienceActivity>>, 
+    pub audience_activity: Option<Vec<AudienceActivity>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Metric {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.audience_activity.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .audience_activity
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true);
         if !res {
-          println!("Metric {:?}", self.extra);
+            println!("Metric {:?}", self.extra);
         }
         res
     }
 }
-
-
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum MetricField {
@@ -78,5 +80,3 @@ impl std::fmt::Display for MetricField {
         }
     }
 }
-
-

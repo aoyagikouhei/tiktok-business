@@ -1,4 +1,6 @@
-use crate::error::Error;
+use std::time::Duration;
+
+use crate::{error::Error, options::TiktokOptions};
 use chrono::prelude::*;
 use reqwest::{RequestBuilder, StatusCode, header::HeaderMap};
 use serde::de::DeserializeOwned;
@@ -21,26 +23,57 @@ pub struct ResponseHeader {
     pub x_tt_log_id: String,
 }
 
-pub async fn execute_api<T>(builder: RequestBuilder) -> Result<ApiResponse<T>, Error>
+pub(crate) async fn execute_api<T>(
+    f: impl Fn() -> RequestBuilder,
+    options: &Option<TiktokOptions>,
+) -> Result<ApiResponse<T>, Error>
 where
     T: DeserializeOwned,
 {
-    let response = builder.send().await?;
-    let status_code = response.status();
-    let header = make_response_header(response.headers());
-    let text = match response.text().await {
-        Ok(text) => text,
-        Err(err) => return Err(Error::Other(format!("{:?}", err), status_code)),
-    };
-    let json = match serde_json::from_str::<T>(&text) {
-        Ok(json) => json,
-        Err(_err) => return Err(Error::Other(text, status_code)),
-    };
-    Ok(ApiResponse {
-        body: json,
-        status_code,
-        header,
-    })
+    let res = reqwest_builder_retry::convenience::execute(
+        |_| f(),
+        |response| {
+            reqwest_builder_retry::convenience::json::check_done::<T>(
+                response,
+                &[
+                    StatusCode::TOO_MANY_REQUESTS,
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                ],
+            )
+        },
+        options.as_ref().and_then(|opt| opt.try_count).unwrap_or(0), // リトライ回数
+        options
+            .as_ref()
+            .and_then(|opt| opt.retry_duration)
+            .unwrap_or(Duration::from_secs(2)), // リトライ間隔
+    )
+    .await;
+
+    match res {
+        Ok(response) => {
+            let header = make_response_header(&response.headers);
+            Ok(ApiResponse {
+                body: response.data,
+                status_code: response.status_code,
+                header,
+            })
+        }
+        Err(err) => match err {
+            reqwest_builder_retry::error::Error::NoTry => Err(Error::Invalid("NoTry".into())),
+            reqwest_builder_retry::error::Error::Stop(res) => Err(convert_response_error(res)),
+            reqwest_builder_retry::error::Error::TryOver(res) => Err(convert_response_error(res)),
+        },
+    }
+}
+
+fn convert_response_error(err: reqwest_builder_retry::convenience::json::ResponseError) -> Error {
+    if let Some(response_data) = err.response_data {
+        Error::Other(response_data.body, response_data.status_code)
+    } else if let Some(error) = err.error {
+        Error::Reqwest(error)
+    } else {
+        Error::Invalid("ResponseError Invalid".into())
+    }
 }
 
 fn make_response_header(header: &HeaderMap) -> Option<ResponseHeader> {

@@ -1,51 +1,55 @@
-use crate::responses::{reply::Reply};
+use crate::responses::reply::Reply;
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
-use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Comment {
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub comment_id: Option<String>, 
+    pub comment_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub video_id: Option<String>, 
+    pub video_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_id: Option<String>, 
+    pub user_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub unique_identifier: Option<String>, 
+    pub unique_identifier: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub create_time: Option<String>, 
+    pub create_time: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub text: Option<String>, 
+    pub text: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub likes: Option<i64>, 
+    pub likes: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub replies: Option<i64>, 
+    pub replies: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub owner: Option<bool>, 
+    pub owner: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub liked: Option<bool>, 
+    pub liked: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub pinned: Option<bool>, 
+    pub pinned: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<Status>, 
+    pub status: Option<Status>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub username: Option<String>, 
+    pub username: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub profile_image: Option<String>, 
+    pub profile_image: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub parent_comment_id: Option<String>, 
+    pub parent_comment_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub reply_list: Option<Vec<Reply>>, 
+    pub reply_list: Option<Vec<Reply>>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
 
 impl Comment {
     pub fn is_empty_extra(&self) -> bool {
-        let res = self.extra.is_empty() &&
-        self.reply_list.as_ref().map(|it| it.iter().all(|item| item.is_empty_extra())).unwrap_or(true);
+        let res = self.extra.is_empty()
+            && self
+                .reply_list
+                .as_ref()
+                .map(|it| it.iter().all(|item| item.is_empty_extra()))
+                .unwrap_or(true);
         if !res {
-          println!("Comment {:?}", self.extra);
+            println!("Comment {:?}", self.extra);
         }
         res
     }
@@ -69,10 +73,10 @@ impl std::fmt::Display for Status {
 }
 
 impl Default for Status {
-    fn default() -> Self { Self::Hidden }
+    fn default() -> Self {
+        Self::Hidden
+    }
 }
-
-
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum CommentField {
@@ -139,5 +143,3 @@ impl std::fmt::Display for CommentField {
         }
     }
 }
-
-
