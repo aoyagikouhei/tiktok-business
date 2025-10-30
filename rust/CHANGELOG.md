@@ -4,7 +4,7 @@
 * Update edtion 2025
 * Update libraries version
 * Modify apply_options to apply_timeout
-* Add try_count, try_duraiton to TiktokOptions 
+* Add retry
 
 ## v0.4.3 (2024/06/28)
 * Modify webhook serialize
