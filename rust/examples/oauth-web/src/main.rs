@@ -74,8 +74,7 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
             .unwrap()
             .videos
             .as_ref()
-            .unwrap()
-            .get(0)
+            .unwrap().first()
             .unwrap()
             .item_id
             .as_ref()
@@ -95,8 +94,7 @@ async fn oauth(uri: Uri, cookies: Cookies) -> impl IntoResponse {
             .unwrap()
             .comments
             .as_ref()
-            .unwrap()
-            .get(0)
+            .unwrap().first()
             .unwrap();
         let comment_id = comment.comment_id.as_ref().unwrap();
         let username = comment.username.as_ref().unwrap();
