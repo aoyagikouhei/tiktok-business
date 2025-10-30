@@ -1,12 +1,12 @@
 use crate::{
     error::Error,
-    options::{apply_options, make_url, TiktokOptions},
+    options::{TiktokOptions, apply_options, make_url},
 };
-use base64::prelude::{Engine as _, BASE64_URL_SAFE_NO_PAD};
+use base64::prelude::{BASE64_URL_SAFE_NO_PAD, Engine as _};
 use itertools::Itertools;
-use percent_encoding::{utf8_percent_encode, NON_ALPHANUMERIC};
+use percent_encoding::{NON_ALPHANUMERIC, utf8_percent_encode};
 use rand::Rng;
-use reqwest::{header::CACHE_CONTROL, StatusCode};
+use reqwest::{StatusCode, header::CACHE_CONTROL};
 
 const AUTH_URL: &str = "https://www.tiktok.com/v2/auth/authorize/";
 const TOKEN_URL: &str = "/tt_user/oauth2/token/";
@@ -131,7 +131,7 @@ async fn execute_send(
 }
 
 fn csrf_token() -> String {
-    let random_bytes: Vec<u8> = (0..16).map(|_| rand::thread_rng().gen::<u8>()).collect();
+    let random_bytes: Vec<u8> = (0..16).map(|_| rand::rng().random::<u8>()).collect();
     BASE64_URL_SAFE_NO_PAD.encode(random_bytes)
 }
 

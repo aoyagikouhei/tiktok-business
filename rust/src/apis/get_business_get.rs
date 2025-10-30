@@ -1,9 +1,9 @@
 use crate::responses::account::Account;
 use crate::responses::account::AccountField;
 use crate::{
-    apis::{execute_api, ApiResponse},
+    apis::{ApiResponse, execute_api},
     error::Error as ApiError,
-    options::{apply_options, make_url, TiktokOptions},
+    options::{TiktokOptions, apply_options, make_url},
 };
 use itertools::Itertools;
 use reqwest::RequestBuilder;

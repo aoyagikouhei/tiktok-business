@@ -1,8 +1,8 @@
 use crate::responses::comment::Comment;
 use crate::{
-    apis::{execute_api, ApiResponse},
+    apis::{ApiResponse, execute_api},
     error::Error as ApiError,
-    options::{apply_options, make_url, TiktokOptions},
+    options::{TiktokOptions, apply_options, make_url},
 };
 use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};

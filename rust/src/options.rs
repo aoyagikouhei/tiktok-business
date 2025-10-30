@@ -12,11 +12,13 @@ pub struct TiktokOptions {
 }
 
 pub fn clear_prefix_url() {
-    std::env::set_var(ENV_KEY, URL_PREFIX);
+    // TODO: Audit that the environment access only happens in single-threaded code.
+    unsafe { std::env::set_var(ENV_KEY, URL_PREFIX) };
 }
 
 pub fn setup_prefix_url(url: &str) {
-    std::env::set_var(ENV_KEY, url);
+    // TODO: Audit that the environment access only happens in single-threaded code.
+    unsafe { std::env::set_var(ENV_KEY, url) };
 }
 
 pub(crate) fn make_url(postfix_url: &str, options: &Option<TiktokOptions>) -> String {

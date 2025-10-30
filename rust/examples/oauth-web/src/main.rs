@@ -1,8 +1,8 @@
 use axum::{
+    Router,
     http::Uri,
     response::{Html, IntoResponse},
     routing::get,
-    Router,
 };
 use chrono::prelude::*;
 use std::collections::HashMap;

@@ -1,4 +1,4 @@
-use chrono::{prelude::*, Duration};
+use chrono::{Duration, prelude::*};
 use serde::{Deserialize, Serialize};
 use strum::EnumString;
 
