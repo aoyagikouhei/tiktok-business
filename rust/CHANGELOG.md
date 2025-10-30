@@ -1,6 +1,6 @@
 # Changes
 
-## v0.5.0 (2025/10/31)
+## v0.5.0 (2025/10/30)
 * Update edtion 2025
 * Update libraries version
 * Modify apply_options to apply_timeout
