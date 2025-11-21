@@ -1,0 +1,60 @@
+---
+
+url: /business/video/publish/
+method: post
+body:
+  properties:
+    - name: business_id
+      required: true
+      type: string
+    - name: video_url
+      required: true
+      type: string
+    - name: custom_thumbnail_url
+      type: string
+    - name: post_info
+      required: true
+      type: object
+      properties:
+        - name: caption
+          type: string
+        - name: is_brand_organic
+          required: true
+          type: bool
+        - name: is_branded_content
+          required: true
+          type: bool
+        - name: tto_invite_link
+          type: string
+        - name: disable_comment
+          type: bool
+        - name: disable_duet
+          type: bool
+        - name: disable_stitch
+          type: bool
+        - name: thumbnail_offset
+          type: int
+        - name: is_ai_generated
+          type: bool
+        - name: upload_to_draft
+          type: bool
+        - name: is_ads_only
+          type: bool
+response:
+  type: object
+  properties:
+    request_id:
+      required: true
+      type: string
+    code:
+      required: true
+      type: int
+    message:
+      required: true
+      type: string
+    data:
+      type: object
+      properties:
+        share_id:
+          required: true
+          type: string

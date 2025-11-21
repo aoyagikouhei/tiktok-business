@@ -10,6 +10,7 @@ pub mod get_business_get;
 pub mod get_business_video_list;
 pub mod post_business_comment_reply_create;
 pub mod post_business_photo_publish;
+pub mod post_business_video_publish;
 
 #[derive(Debug)]
 pub struct ApiResponse<T> {
