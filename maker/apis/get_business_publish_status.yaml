@@ -1,0 +1,35 @@
+---
+
+url: /business/publish/status/
+method: get
+queries:
+  - name: business_id
+    required: true
+    type: string
+  - name: publish_id
+    required: true
+    type: string
+response:
+  type: object
+  properties:
+    request_id:
+      required: true
+      type: string
+    code:
+      required: true
+      type: int
+    message:
+      required: true
+      type: string
+    data:
+      type: object
+      properties:
+        status:
+          required: true
+          type: string
+        post_ids:
+          type: array
+          items:
+            type: string
+        reason:
+          type: string
