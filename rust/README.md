@@ -9,10 +9,14 @@ TikTok Business API library.
 - Mockable Api
 
 ## Supported APIs
+
 - GET /business/comment/reply/create/
+- GET /business/publish/status
 - GET /business/get/
 - GET /business/video/list/
 - POST /business/comment/reply/create/
+- POST /business/photo/publish/
+- POST /business/video/publish/
 
 ## Features
 ### default

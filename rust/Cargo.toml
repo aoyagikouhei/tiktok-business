@@ -1,7 +1,7 @@
 workspace = { members = ["examples/oauth-web"] }
 [package]
 name = "tiktok-business"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2024"
 authors = ["aoyagikouhei <aoyagi.kouhei@gmail.com>"]
 license = "MIT"
