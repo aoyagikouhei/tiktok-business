@@ -1,0 +1,62 @@
+---
+
+url: /business/photo/publish/
+method: post
+body:
+  properties:
+    - name: business_id
+      required: true
+      type: string
+    - name: photo_images
+      required: true
+      type: array
+      items:
+        type: string
+    - name: photo_cover_index
+      type: int
+    - name: post_info
+      required: true
+      type: object
+      properties:
+        - name: privacy_level
+          required: true
+          type: enum_single
+          value:
+            - PUBLIC_TO_EVERYONE
+            - MUTUAL_FOLLOW_FRIENDS
+            - FOLLOWER_OF_CREATOR
+            - SELF_ONLY
+        - name: title
+          type: string
+        - name: caption
+          type: string
+        - name: auto_add_music
+          type: bool
+        - name: is_brand_organic
+          required: true
+          type: bool
+        - name: is_branded_content
+          required: true
+          type: bool
+        - name: is_draft
+          type: bool
+        - name: disable_comment
+          type: bool
+response:
+  type: object
+  properties:
+    request_id:
+      required: true
+      type: string
+    code:
+      required: true
+      type: int
+    message:
+      required: true
+      type: string
+    data:
+      type: object
+      properties:
+        share_id:
+          required: true
+          type: string
