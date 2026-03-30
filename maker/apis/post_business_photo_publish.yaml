@@ -58,5 +58,4 @@ response:
       type: object
       properties:
         share_id:
-          required: true
           type: string

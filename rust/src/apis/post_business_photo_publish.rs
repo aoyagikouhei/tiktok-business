@@ -116,7 +116,8 @@ impl Response {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct Data {
-    pub share_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub share_id: Option<String>,
     #[serde(flatten)]
     pub extra: std::collections::HashMap<String, serde_json::Value>,
 }
