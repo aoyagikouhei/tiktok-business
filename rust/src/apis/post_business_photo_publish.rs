@@ -8,9 +8,10 @@ use serde::{Deserialize, Serialize};
 
 const URL: &str = "/business/photo/publish/";
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum PrivacyLevel {
     #[serde(rename = "PUBLIC_TO_EVERYONE")]
+    #[default]
     PublicToEveryone,
     #[serde(rename = "MUTUAL_FOLLOW_FRIENDS")]
     MutualFollowFriends,
@@ -28,12 +29,6 @@ impl std::fmt::Display for PrivacyLevel {
             Self::FollowerOfCreator => write!(f, "FOLLOWER_OF_CREATOR"),
             Self::SelfOnly => write!(f, "SELF_ONLY"),
         }
-    }
-}
-
-impl Default for PrivacyLevel {
-    fn default() -> Self {
-        Self::PublicToEveryone
     }
 }
 

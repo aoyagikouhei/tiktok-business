@@ -1,5 +1,9 @@
 # Changes
 
+## v0.6.0 (2026/03/30)
+* Update reqwest 13
+* Modify optional data. shared_id, status
+
 ## v0.5.1 (2025/12/04)
 * Add get_business_publish_status, post_business_photo_publish, post_business_video_publish
 
