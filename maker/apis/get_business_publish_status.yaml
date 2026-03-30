@@ -25,7 +25,6 @@ response:
       type: object
       properties:
         status:
-          required: true
           type: string
         post_ids:
           type: array
