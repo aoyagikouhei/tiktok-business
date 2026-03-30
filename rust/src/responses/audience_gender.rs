@@ -21,9 +21,10 @@ impl AudienceGender {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum Gender {
     #[serde(rename = "Female")]
+    #[default]
     Female,
     #[serde(rename = "Male")]
     Male,
@@ -38,12 +39,6 @@ impl std::fmt::Display for Gender {
             Self::Male => write!(f, "Male"),
             Self::Other => write!(f, "Other"),
         }
-    }
-}
-
-impl Default for Gender {
-    fn default() -> Self {
-        Self::Female
     }
 }
 

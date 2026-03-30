@@ -21,9 +21,10 @@ impl ImpressionSource {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum ImpressionSourceEnum {
     #[serde(rename = "For You")]
+    #[default]
     ForYou,
     #[serde(rename = "Follow")]
     Follow,
@@ -50,12 +51,6 @@ impl std::fmt::Display for ImpressionSourceEnum {
             Self::OtherProfileVv => write!(f, "other_profile_vv"),
             Self::Search => write!(f, "Search"),
         }
-    }
-}
-
-impl Default for ImpressionSourceEnum {
-    fn default() -> Self {
-        Self::ForYou
     }
 }
 

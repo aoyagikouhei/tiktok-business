@@ -23,9 +23,10 @@ pub struct Api {
     max_count: Option<usize>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum Status {
     #[serde(rename = "ALL")]
+    #[default]
     All,
     #[serde(rename = "PUBLIC")]
     Public,
@@ -40,15 +41,10 @@ impl std::fmt::Display for Status {
     }
 }
 
-impl Default for Status {
-    fn default() -> Self {
-        Self::All
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum SortField {
     #[serde(rename = "likes")]
+    #[default]
     Likes,
     #[serde(rename = "replies")]
     Replies,
@@ -66,15 +62,10 @@ impl std::fmt::Display for SortField {
     }
 }
 
-impl Default for SortField {
-    fn default() -> Self {
-        Self::Likes
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum SortOrder {
     #[serde(rename = "asc")]
+    #[default]
     Asc,
     #[serde(rename = "desc")]
     Desc,
@@ -89,12 +80,6 @@ impl std::fmt::Display for SortOrder {
             Self::Desc => write!(f, "desc"),
             Self::Smart => write!(f, "smart"),
         }
-    }
-}
-
-impl Default for SortOrder {
-    fn default() -> Self {
-        Self::Asc
     }
 }
 

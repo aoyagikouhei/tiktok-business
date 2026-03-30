@@ -5,7 +5,7 @@ use crate::{
 use base64::prelude::{BASE64_URL_SAFE_NO_PAD, Engine as _};
 use itertools::Itertools;
 use percent_encoding::{NON_ALPHANUMERIC, utf8_percent_encode};
-use rand::Rng;
+use rand::RngExt;
 use reqwest::{StatusCode, header::CACHE_CONTROL};
 
 const AUTH_URL: &str = "https://www.tiktok.com/v2/auth/authorize/";

@@ -47,9 +47,10 @@ impl Reply {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub enum Status {
     #[serde(rename = "HIDDEN")]
+    #[default]
     Hidden,
     #[serde(rename = "PUBLIC")]
     Public,
@@ -61,12 +62,6 @@ impl std::fmt::Display for Status {
             Self::Hidden => write!(f, "HIDDEN"),
             Self::Public => write!(f, "PUBLIC"),
         }
-    }
-}
-
-impl Default for Status {
-    fn default() -> Self {
-        Self::Hidden
     }
 }
 
